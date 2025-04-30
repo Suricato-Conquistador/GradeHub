@@ -10,16 +10,28 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       grade: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.DECIMAL,
+        allowNull: false,
       },
       subject: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       teacherId: {
-        type: Sequelize.NUMBER
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'users',
+          key: 'id',
+        }
       },
       studentId: {
-        type: Sequelize.NUMBER
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
       },
       createdAt: {
         allowNull: false,

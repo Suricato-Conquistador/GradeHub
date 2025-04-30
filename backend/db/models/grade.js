@@ -2,7 +2,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../config/database');
 
-module.exports = sequelize.define('grades',
+const grade = sequelize.define('grades',
   {
     id: {
       allowNull: false,
@@ -20,7 +20,10 @@ module.exports = sequelize.define('grades',
         notEmpty: {
           msg: "grade cannot be empty",
         },
-      }
+        isDecimal: {
+          msg: "grade value must be in decimal",
+        },
+      },
     },
     subject: {
       allowNull: false,
@@ -36,7 +39,7 @@ module.exports = sequelize.define('grades',
     },
     teacherId: {
       allowNull: false,
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       validate: {
         notNull: {
           msg: "teacherId cannot be null",
@@ -48,7 +51,7 @@ module.exports = sequelize.define('grades',
     },
     studentId: {
       allowNull: false,
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       validate: {
         notNull: {
           msg: "studentId cannot be null",
@@ -76,3 +79,5 @@ module.exports = sequelize.define('grades',
     modelName: 'grades'
   }
 );
+
+module.exports = grade;

@@ -3,8 +3,9 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../../config/database');
 const bcrypt = require('bcrypt');
 const AppError = require('../../utils/appError');
+const grade = require('./grade');
 
-module.exports = sequelize.define('users', 
+const user = sequelize.define('users', 
   {
     id: {
       allowNull: false,
@@ -108,3 +109,15 @@ module.exports = sequelize.define('users',
     modelName: 'users'
   }
 );
+
+user.hasMany(grade, {foreignKey: 'teacherId'});
+grade.belongsTo(user, {
+  foreignKey: 'teacherId',
+});
+
+user.hasMany(grade, {foreignKey: 'studentId'});
+grade.belongsTo(user, {
+  foreignKey: 'studentId',
+});
+
+module.exports = user;
