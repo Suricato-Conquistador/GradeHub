@@ -11,7 +11,7 @@ module.exports = {
       },
       userType: {
         allowNull: false,
-        type: Sequelize.ENUM('0', '1')
+        type: Sequelize.ENUM('0', '1', '2')
       },
       RA: {
         allowNull: false,

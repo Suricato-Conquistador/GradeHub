@@ -15,7 +15,7 @@ const user = sequelize.define('users',
     },
     userType: {
       allowNull: false,
-      type: DataTypes.ENUM('0', '1'),
+      type: DataTypes.ENUM('0', '1', '2'),
       validate: {
         notNull: {
           msg: "userType cannot be null",
