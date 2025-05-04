@@ -1,7 +1,6 @@
 const { Sequelize } = require('sequelize');
 const user = require('../db/models/user');
 const catchAsync = require('../utils/catchAsync');
-const user = require('../db/models/user');
 const AppError = require('../utils/appError');
 
 const getAllUsers = catchAsync(async (req, res, next) => {
