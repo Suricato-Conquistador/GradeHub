@@ -2,7 +2,7 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 
 
-const LoginPage = () => {
+const Login = () => {
     return(
         <div className="content">
             <div className="p-lf"></div>
@@ -20,7 +20,6 @@ const LoginPage = () => {
             </div>
         </div>
     )
-
 }
 
-export default LoginPage;
+export default Login;
