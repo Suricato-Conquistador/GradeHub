@@ -1,3 +1,4 @@
+const { Op } = require('@sequelize/core');
 const grade = require('../db/models/grade');
 const user = require('../db/models/user');
 const AppError = require('../utils/appError');
@@ -97,4 +98,8 @@ const deleteGrade = catchAsync(async (req, res, next) => {
     });
 });
 
-module.exports = { createGrade, getAllGrades, getGradeById, updateGrade, deleteGrade };
+const deleteGradeBackup = catchAsync(async (req, res, next) => {
+    await grade.destroy({ where: { deletedAt: { [Op.ne]: null }}});
+});
+
+module.exports = { createGrade, getAllGrades, getGradeById, updateGrade, deleteGrade, deleteGradeBackup };

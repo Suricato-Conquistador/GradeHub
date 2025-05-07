@@ -1,4 +1,5 @@
 const { Sequelize } = require('sequelize');
+const { Op } = require('@sequelize/core');
 const user = require('../db/models/user');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
@@ -74,4 +75,8 @@ const deleteUser = catchAsync(async (req, res, next) => {
     });
 });
 
-module.exports = { getAllUsers, getUserById, updateUser, deleteUser };
+const deleteUserBackup = catchAsync(async (req, res, next) => {
+    await user.destroy({ where: { deletedAt: { [Op.ne]: null }}});
+});
+
+module.exports = { getAllUsers, getUserById, updateUser, deleteUser, deleteUserBackup };

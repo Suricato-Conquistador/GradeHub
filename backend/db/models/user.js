@@ -28,6 +28,7 @@ const user = sequelize.define('users',
     RA: {
       allowNull: false,
       type: DataTypes.STRING,
+      unique: true,
       validate: {
         notNull: {
           msg: "RA cannot be null",
@@ -52,6 +53,7 @@ const user = sequelize.define('users',
     email: {
       allowNull: false,
       type: DataTypes.STRING,
+      unique: true,
       validate: {
         notNull: {
           msg: "Email cannot be null",
@@ -63,7 +65,6 @@ const user = sequelize.define('users',
           msg: "This is a not valid email",
         }
       },
-      unique: true,
     },
     password: {
       allowNull: false,
