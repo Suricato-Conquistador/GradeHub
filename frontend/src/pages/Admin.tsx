@@ -3,9 +3,11 @@ import Swal from "sweetalert2";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import Auth from "../server/routes/auth";
+import User from "../server/routes/user";
 
 
 const auth = new Auth()
+const user = new User()
 
 const Admin = () => {
     const nameRef = createRef<HTMLInputElement>()
@@ -84,12 +86,20 @@ const Admin = () => {
             </div>
 
             <div>
+                {/* tabela professores */}
                 <section>
 
                 </section>
+                {/* tabela alunos */}
                 <section>
 
                 </section>
+            </div>
+            {/* cadastrar matéria */}
+            <div>
+                <Input labelId={"subjectName"} labelName={"Nome da matéria"} type={"text"} />
+                <Input labelId={"teacherName"} labelName={"Nome do professor"} type={"text"} />
+                <Button title={"Cadastrar matéria"} />
             </div>
         </>
     )
