@@ -104,8 +104,8 @@ const user = sequelize.define('users',
     },
   }, 
   {
-    paranoid: true,
-    freezeTableName: true,
+    paranoid: true, // Soft delete
+    freezeTableName: true, // dEsabilita a pluralização
     modelName: 'users'
   }
 );
