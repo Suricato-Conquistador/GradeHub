@@ -14,7 +14,7 @@ const generateToken = (payload) => {
 const signup = catchAsync(async (req, res, next) => {
     const body = req.body;
 
-    if(!['0', '1'].includes(body.userType)) {
+    if(!['0', '1', '2'].includes(body.userType)) {
         throw new AppError("Invalid user type", 400);
     }
 
@@ -54,6 +54,8 @@ const login = catchAsync(async (req, res, next) => {
     }
 
     const result = await user.findOne({where: { email }});
+    console.log(result);
+
     
     if(!result || !(await bcrypt.compare(password, result.password))) {
         return next(new AppError("Incorrect email or password", 401));

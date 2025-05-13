@@ -1,5 +1,6 @@
 require('dotenv').config({path: `${process.cwd()}/.env`});
 const express = require('express');
+const cors = require("cors")
 
 const authRouter = require('./routes/authRouter');
 const gradeRouter = require('./routes/gradeRouter');
@@ -9,6 +10,7 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 
 const app = express();
+app.use(cors());
 
 const PORT = process.env.PORT || 4000;
 

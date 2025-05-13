@@ -63,8 +63,7 @@ const Admin = () => {
 
     const getTeachers = async() => {
         try {
-            
-            
+
         } catch (error) {
             console.log(error)
             Swal.fire({
@@ -77,7 +76,6 @@ const Admin = () => {
     
     const getStudents = async() => {
         try {
-            
             
         } catch (error) {
             console.log(error)
