@@ -1,4 +1,4 @@
-const { Op } = require('@sequelize/core');
+const { Op } = require('sequelize');
 const grade = require('../db/models/grade');
 const user = require('../db/models/user');
 const AppError = require('../utils/appError');
@@ -23,16 +23,32 @@ const createGrade = catchAsync(async (req, res, next) => {
 
 const getAllGrades = catchAsync(async (req, res, next) => {
     const userId = req.user.id;
-    let result = await grade.findAll({ include: user, where: {teacherId: userId} });
+    
+    const userData = await user.findByPk(userId);
+    const userType = userData.userType;
 
-    if(!result) {
-        result = await grade.findAll({ include: user, where: {studentId: userId} });
+    if(userType === '1') {
+        let result = await grade.findAll({ include: user, where: { teacherId: userId } });
+        
+        return res.json({ 
+            status: 'success', 
+            data: result 
+        });
+    } else if(userType === '2') {
+        let result = await grade.findAll({ include: user, where: { studentId: userId }});
+    
+        return res.json({
+            status: 'success',
+            data: result
+        });
+    } else {
+        let result = await grade.findAll({ include: user })
+    
+        return res.json({
+            status: 'success',
+            data: result
+        });
     }
-
-    return res.json({
-        status: 'success',
-        data: result,
-    });
 });
 
 const getGradeById = catchAsync(async (req, res, next) => {
@@ -48,6 +64,16 @@ const getGradeById = catchAsync(async (req, res, next) => {
         data: result,
     });
 });
+
+const getGradeByStudent = catchAsync(async (req, res, next) => {
+    const studentId = req.params.id;
+    const result = await grade.findOne({ where: { studentId: studentId }});
+
+    return res.json({
+        status: 'success',
+        data: result,
+    });
+})
 
 const updateGrade = catchAsync(async (req, res, next) => {
     const id = req.params.id;
@@ -102,4 +128,4 @@ const deleteGradeBackup = catchAsync(async (req, res, next) => {
     await grade.destroy({ where: { deletedAt: { [Op.ne]: null }}});
 });
 
-module.exports = { createGrade, getAllGrades, getGradeById, updateGrade, deleteGrade, deleteGradeBackup };
+module.exports = { createGrade, getAllGrades, getGradeById, getGradeByStudent, updateGrade, deleteGrade, deleteGradeBackup };

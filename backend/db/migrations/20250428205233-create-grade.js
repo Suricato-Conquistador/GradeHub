@@ -13,15 +13,11 @@ module.exports = {
         type: Sequelize.DECIMAL,
         allowNull: false,
       },
-      subject: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      teacherId: {
+      subjectId: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
-          model: 'users',
+          model: 'subjects',
           key: 'id',
         }
       },

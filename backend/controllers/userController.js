@@ -1,5 +1,4 @@
-const { Sequelize } = require('sequelize');
-const { Op } = require('@sequelize/core');
+const { Op } = require('sequelize');
 const user = require('../db/models/user');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
@@ -8,12 +7,26 @@ const getAllUsers = catchAsync(async (req, res, next) => {
     const users = await user.findAndCountAll({
         where: {
             userType: {
-                [Sequelize.prototype.ne]: '0',
+                [Op.ne]: userType,
             },
         },
         attributes: { exclude: ['password'] },
     });
-    
+
+    return res.status(200).json({
+        status: 'success',
+        data: users,
+    });
+});
+
+const getUsersByRole = catchAsync(async (req, res, next) => {
+    const userType = req.params.userType;
+
+    const users = await user.findAndCountAll({
+        where: { userType: userType },
+        attributes: { exclude: ['userType', 'password'] },
+    });
+
     return res.status(200).json({
         status: 'success',
         data: users,
@@ -79,4 +92,4 @@ const deleteUserBackup = catchAsync(async (req, res, next) => {
     await user.destroy({ where: { deletedAt: { [Op.ne]: null }}});
 });
 
-module.exports = { getAllUsers, getUserById, updateUser, deleteUser, deleteUserBackup };
+module.exports = { getAllUsers, getUsersByRole, getUserById, updateUser, deleteUser, deleteUserBackup };

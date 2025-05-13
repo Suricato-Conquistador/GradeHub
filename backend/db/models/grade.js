@@ -25,9 +25,9 @@ const grade = sequelize.define('grades',
         },
       },
     },
-    subject: {
+    subjectId: {
       allowNull: false,
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       validate: {
         notNull: {
           msg: "subject cannot be null",
