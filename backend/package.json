@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start-dev": "nodemon server.js"
+    "recreate-migrations": "npx sequelize-cli db:migrate:undo:all && npx sequelize-cli db:migrate",
+    "recreate-seeders": "npx sequelize-cli db:seed:undo:all && npx sequelize-cli db:seed:all",
+    "clear-data": "npm run recreate-migrations && npm run recreate-seeders",
+    "start-clear": "npm run clear-data && nodemon server.js",
+    "start": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",

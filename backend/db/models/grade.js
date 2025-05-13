@@ -37,18 +37,6 @@ const grade = sequelize.define('grades',
         },
       },
     },
-    teacherId: {
-      allowNull: false,
-      type: DataTypes.INTEGER,
-      validate: {
-        notNull: {
-          msg: "teacherId cannot be null",
-        },
-        notEmpty: {
-          msg: "teacherId cannot be empty",
-        },
-      },
-    },
     studentId: {
       allowNull: false,
       type: DataTypes.INTEGER,

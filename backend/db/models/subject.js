@@ -54,9 +54,9 @@ const subject = sequelize.define('subjects',
     }
 );
 
-subject.hasMany(grade, {foreignKey: 'gradeId'});
+subject.hasMany(grade, {foreignKey: 'subjectId'});
 grade.belongsTo(subject, {
-    foreignKey: 'gradeId',
+    foreignKey: 'subjectId',
 });
 
 module.exports = subject;

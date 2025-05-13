@@ -5,12 +5,8 @@ const AppError = require('../utils/appError');
 
 const getAllUsers = catchAsync(async (req, res, next) => {
     const users = await user.findAndCountAll({
-        where: {
-            userType: {
-                [Op.ne]: userType,
-            },
-        },
-        attributes: { exclude: ['password'] },
+        where: { deletedAt: null },
+        attributes: { exclude: ['userType', 'password', 'deletedAt'] },
     });
 
     return res.status(200).json({
@@ -24,8 +20,12 @@ const getUsersByRole = catchAsync(async (req, res, next) => {
 
     const users = await user.findAndCountAll({
         where: { userType: userType },
-        attributes: { exclude: ['userType', 'password'] },
+        attributes: { exclude: ['userType', 'password', 'deletedAt'] },
     });
+
+    if(!users) {
+        return next(new AppError("Invalid user type", 400));
+    }
 
     return res.status(200).json({
         status: 'success',
@@ -33,9 +33,13 @@ const getUsersByRole = catchAsync(async (req, res, next) => {
     });
 });
 
+//Pegar pelo dono da requisição, sem uso de params
 const getUserById = catchAsync(async (req, res, next) => {
     const userId = req.params.id;
-    const result = await user.findByPk(userId, { exclude: ['password'] });
+    const result = await user.findByPk(userId, { 
+        where: { deletedAt: null }, 
+        attributes: { exclude: ['userType', 'password', 'deletedAt'] },
+    });
 
     if(!result) {
         return next(new AppError("Invalid user id", 400));
@@ -51,23 +55,28 @@ const updateUser = catchAsync(async (req, res, next) => {
     const id = req.params.id;
     const body = req.body;
 
-    const result = await user.findOne({ where: { id: id }});
+    const result = await user.findOne({ where: { id: id, deletedAt: null }});
 
     if(!result) {
         return next(new AppError("Invalid user id", 400));
     }
 
-    result.userType = body.userType;
-    result.RA = body.RA;
     result.name = body.name;
     result.email = body.email;
+    //Não há criptografia de senha
     result.password = body.password;
 
     const updatedResult = await result.save();
 
+    const resultData = updatedResult.toJSON();
+
+    delete resultData.userType;
+    delete resultData.password;
+    delete resultData.deletedAt;
+
     return res.json({
         status: 'success',
-        data: updatedResult,
+        data: resultData,
     });
 });
 

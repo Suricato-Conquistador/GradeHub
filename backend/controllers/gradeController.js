@@ -6,14 +6,16 @@ const catchAsync = require('../utils/catchAsync');
 
 const createGrade = catchAsync(async (req, res, next) => {
     const body = req.body;
-    const teacherId = req.user.id;
 
     const newGrade = await grade.create({
         grade: body.grade,
-        subject: body.subject,
-        teacherId: teacherId,
+        subjectId: body.subjectId,
         studentId: body.studentId
     });
+
+    const result = newGrade.toJSON();
+
+    delete result.deletedAt;
 
     return res.status(201).json({
         status: 'success', 
@@ -67,7 +69,7 @@ const getGradeById = catchAsync(async (req, res, next) => {
 
 const getGradeByStudent = catchAsync(async (req, res, next) => {
     const studentId = req.params.id;
-    const result = await grade.findOne({ where: { studentId: studentId }});
+    const result = await grade.findAndCountAll({ where: { studentId: studentId, deletedAt: null }});
 
     return res.json({
         status: 'success',

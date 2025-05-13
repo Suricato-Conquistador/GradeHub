@@ -14,10 +14,11 @@ const generateToken = (payload) => {
 const signup = catchAsync(async (req, res, next) => {
     const body = req.body;
 
-    if(!['0', '1'].includes(body.userType)) {
+    if(!['0', '1', '2'].includes(body.userType)) {
         throw new AppError("Invalid user type", 400);
     }
 
+    console.log(body.userType)
     const newUser = await user.create({
         userType: body.userType,
         RA:body.RA,
@@ -31,14 +32,11 @@ const signup = catchAsync(async (req, res, next) => {
         return next(new AppError("Failed to create the user", 400));
     }
     
-    const result = newUser.toJSON()
+    const result = newUser.toJSON();
 
+    delete result.userType;
     delete result.password;
     delete result.deletedAt;
-
-    result.token = generateToken({
-        id: result.id
-    });
 
     return res.status(201).json({
         status: 'success',

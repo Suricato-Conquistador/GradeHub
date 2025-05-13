@@ -11,9 +11,13 @@ const createSubject = catchAsync(async (req, res, next) => {
         teacherId: body.teacherId
     });
 
+    const result = newSubject.toJSON();
+
+    delete result.deletedAt;
+
     return res.status(201).json({
         status: 'success',
-        data: newSubject
+        data: result
     });
 });
 
@@ -46,6 +50,8 @@ const getAllSubjects = catchAsync(async (req, res, next) => {
         });
     }
 });
+
+
 
 const getSubjectById = catchAsync(async (req, res, next) => {
     const subjectId = req.params.id;
