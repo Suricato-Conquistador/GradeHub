@@ -1,13 +1,4 @@
 type Props = {
-<<<<<<< Updated upstream
-    labelId: string,
-    labelName: string,
-    classLabel?: string,
-    type: string,
-    classInput?: string
-    reference?: any
-}
-=======
     labelId: string;
     labelName: string;
     classLabel?: string;
@@ -17,7 +8,6 @@ type Props = {
     classInput?: string;
     reference?: any;
 };
->>>>>>> Stashed changes
 
 const Input = (props: Props) => {
     return(

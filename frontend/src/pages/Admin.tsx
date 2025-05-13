@@ -117,7 +117,7 @@ const Admin = () => {
             {/* cadastrar matéria */}
             <div>
                 <Input labelId={"subjectName"} labelName={"Nome da matéria"} type={"text"} />
-                <Select options={["1","2","3"]} optionsName={["1","2","3"]} />
+                <Select options={[]} optionsName={[]} />
                 <Button title={"Cadastrar matéria"} />
             </div>
         </>
