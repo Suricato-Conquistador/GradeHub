@@ -1,4 +1,5 @@
-const { Sequelize } = require('sequelize');
+// const { Sequelize } = require('sequelize');
+const { Op } = require('sequelize');
 const user = require('../db/models/user');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
@@ -7,7 +8,7 @@ const getAllUsers = catchAsync(async (req, res, next) => {
     const users = await user.findAndCountAll({
         where: {
             userType: {
-                [Sequelize.prototype.ne]: '0',
+                [Op.ne]: "0",
             },
         },
         attributes: { exclude: ['password'] },

@@ -2,6 +2,7 @@ import { createRef } from "react";
 import Swal from "sweetalert2";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import Select from "../components/Select";
 import Auth from "../server/routes/auth";
 import User from "../server/routes/user";
 
@@ -16,6 +17,9 @@ const Admin = () => {
     const passwordRef = createRef<HTMLInputElement>()
     const confPassRef = createRef<HTMLInputElement>()
     const radioRef = createRef<HTMLInputElement>()
+
+    const nameSubjectRef = createRef<HTMLInputElement>()
+
 
     const signUp = async() => {
         try {
@@ -59,6 +63,19 @@ const Admin = () => {
 
     const getTeachers = async() => {
         try {
+
+        } catch (error) {
+            console.log(error)
+            Swal.fire({
+                title: "Erro",
+                text: `O usuário não foi cadastrado por conta de um erro: ${error}`,
+                icon: "error"
+                })
+        }
+    }
+    
+    const getStudents = async() => {
+        try {
             
         } catch (error) {
             console.log(error)
@@ -98,7 +115,7 @@ const Admin = () => {
             {/* cadastrar matéria */}
             <div>
                 <Input labelId={"subjectName"} labelName={"Nome da matéria"} type={"text"} />
-                <Input labelId={"teacherName"} labelName={"Nome do professor"} type={"text"} />
+                <Select options={[]} optionsName={[]} />
                 <Button title={"Cadastrar matéria"} />
             </div>
         </>

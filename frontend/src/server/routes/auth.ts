@@ -24,4 +24,3 @@ export default class Auth {
         return response.data
     }
 }
-
