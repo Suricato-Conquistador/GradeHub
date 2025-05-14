@@ -62,8 +62,8 @@ const grade = sequelize.define('grades',
     },
   },
   {
-    paranoid: true,
-    freezeTableName: true,
+    paranoid: true, // Soft delete
+    freezeTableName: true, // dEsabilita a pluralização
     modelName: 'grades'
   }
 );
