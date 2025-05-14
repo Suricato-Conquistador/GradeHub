@@ -5,6 +5,7 @@ const cors = require("cors")
 const authRouter = require('./routes/authRouter');
 const gradeRouter = require('./routes/gradeRouter');
 const userRouter = require('./routes/userRouter');
+const subjectRouter = require('./routes/subjectRouter');
 const catchAsync = require('./utils/catchAsync');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use('/auth', authRouter);
 app.use('/grade', gradeRouter);
 app.use('/user', userRouter);
+app.use('/subject', subjectRouter);
 
 app.use(catchAsync(async (req, res, next) => {
         throw new AppError('Route does not exist', 404);
