@@ -5,6 +5,8 @@ import Button from "../components/Button";
 import Select from "../components/Select";
 import Auth from "../server/routes/auth";
 import User from "../server/routes/user";
+import '../style/Admin.scss';
+
 
 
 const auth = new Auth()
@@ -89,35 +91,59 @@ const Admin = () => {
 
     return(
         <>
-            {/* criação de usuario */}
-            <div>
-                <Input labelId={"name"} labelName={"Nome"} type={"text"} reference={nameRef} />
-                <Input labelId={"ra"} labelName={"RA"} type={"text"} reference={raRef} />
-                <Input labelId={"email"} labelName={"Email"} type={"email"} reference={emailRef} />
-                <Input labelId={"password"} labelName={"Senha"} type={"password"} reference={passwordRef} />
-                <Input labelId={"confirmPassword"} labelName={"Confirme a senha"} type={"password"} reference={confPassRef} />
+           return (
+  <div className="admin-container">
+    {/* Área de cadastros lado a lado */}
+    <div className="cadastros">
+      
+      {/* Cadastro de Aluno/Professor */}
+      <div className="cadastro-user">
+        <h2>Cadastro Aluno / Professor</h2>
+        <Input labelId="name" labelName="Nome" type="text" reference={nameRef} />
+        <Input labelId="ra" labelName="RA" type="text" reference={raRef} />
+        <Input labelId="email" labelName="Email" type="email" reference={emailRef} />
+        <Input labelId="password" labelName="Senha" type="password" reference={passwordRef} />
+        <Input labelId="confirmPassword" labelName="Confirme a senha" type="password" reference={confPassRef} />
 
-                <Input labelId={"teacher"} labelName={"Professor"} type={"radio"} name={"choice"} reference={radioRef} value={"1"} />
-                <Input labelId={"student"} labelName={"Aluno"} type={"radio"} name={"choice"} reference={radioRef} value={"2"} />
-                <Button title={"Cadastrar usuário"} onClick={signUp} />
-            </div>
+        <div className="radio-group">
+          <label>
+            <Input labelId="teacher" labelName="Professor" type="radio" name="choice" reference={radioRef} value="1" />
+            
+          </label>
+          <label>
+            <Input labelId="student" labelName="Aluno" type="radio" name="choice" reference={radioRef} value="2" />
+            
+          </label>
+        </div>
 
-            <div>
-                {/* tabela professores */}
-                <section>
+        <Button title="Cadastrar usuário" onClick={signUp} />
+      </div>
 
-                </section>
-                {/* tabela alunos */}
-                <section>
+      {/* Cadastro de Matéria */}
+      <div className="cadastro-materia">
+        <h2>Cadastro Matéria</h2>
+        <Input labelId="subjectName" labelName="Nome da matéria" type="text" reference={nameSubjectRef} />
+        <Select options={[]} optionsName={[]} />
+        <Button title="Cadastrar matéria" />
+      </div>
+    </div>
 
-                </section>
-            </div>
-            {/* cadastrar matéria */}
-            <div>
-                <Input labelId={"subjectName"} labelName={"Nome da matéria"} type={"text"} />
-                <Select options={[]} optionsName={[]} />
-                <Button title={"Cadastrar matéria"} />
-            </div>
+    {/* Área de tabelas abaixo */}
+    <div className="tabelas">
+      <section>
+        <h3>Professores</h3>
+        {/* tabela professores aqui */}
+      </section>
+
+      <section>
+        <h3>Alunos</h3>
+        {/* tabela alunos aqui */}
+      </section>
+    </div>
+  </div>
+);
+
+
         </>
     )
 }
