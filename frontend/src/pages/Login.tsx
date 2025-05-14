@@ -3,6 +3,9 @@ import Swal from "sweetalert2";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import Auth from "../server/routes/auth";
+import '../style/Login.scss';
+
+
 
 const auth = new Auth()
 
@@ -43,7 +46,7 @@ const Login = () => {
 
     return(
         <div className="content">
-            <div className="p-lf"></div>
+            
 
             <div className="p-rt">
                 <div className="box">
