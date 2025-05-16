@@ -1,12 +1,7 @@
-type Props = {
-    options: number[];
-    optionsName: string[];
-    reference?: any;
-    classname?: string;
-}
+import { SelectProps } from "../interfaces/select.interface";
 
 
-const Select = (props: Props) => {
+const Select = (props: SelectProps) => {
     return(
         <select defaultValue={""} ref={props.reference} className={props.classname}>
             <option value="" disabled>Selecione o professor</option>

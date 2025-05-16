@@ -1,27 +1,22 @@
-type User = {
-    name: string;
-    ra: string;
-};
+import { TableProps } from "../interfaces/table.interface";
 
-type Props = {
-    thList: string[];
-    tdList: User[];
-    classname?: string;
-};
 
-const Table = (props: Props) => {
+const Table = (props: TableProps) => {
     return(
         <table className={props.classname}>
             <thead>
-                {props.thList.map(value => (
-                    <th>{value}</th>
-                ))}
+                <tr>
+                    {props.thList.map((value, index) => (
+                        <th key={index}>{value}</th>
+                    ))}
+                </tr>
             </thead>
             <tbody>
-                {props.tdList.map(value => (
-                    <tr>
-                        <td>{value.name}</td>
-                        <td>{value.ra}</td>
+                {props.tdList.map((row, rowIndex) => (
+                    <tr key={rowIndex}>
+                        <td>{row.ra}</td>
+                        <td>{row.name}</td>
+                        <td>{row.email}</td>
                     </tr>
                 ))}
             </tbody>

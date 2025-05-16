@@ -1,22 +1,19 @@
-import { createRef, use, useEffect, useState } from "react";
-import Swal from "sweetalert2";
-import Input from "../components/Input";
+import { UserTable } from "../interfaces/user.interface";
+import { createRef, useEffect, useState } from "react";
+import Subject from "../server/routes/subject";
 import Button from "../components/Button";
 import Select from "../components/Select";
-import Auth from "../server/routes/auth";
 import User from "../server/routes/user";
-import Subject from "../server/routes/subject";
+import Auth from "../server/routes/auth";
+import Input from "../components/Input";
 import Table from "../components/Table";
+import Swal from "sweetalert2";
 
 
-type UserTable = {
-    name: string;
-    ra: string;
-};
-
+const subject = new Subject();
 const auth = new Auth();
 const user = new User();
-const subject = new Subject();
+
 
 const Admin = () => {
     const nameRef = createRef<HTMLInputElement>();
@@ -27,7 +24,7 @@ const Admin = () => {
     const [selected, setSelected] = useState('');
 
     const nameSubjectRef = createRef<HTMLInputElement>();
-    const teacherIdRef = createRef<HTMLInputElement>();
+    const teacherIdRef = createRef<HTMLSelectElement>();
 
     const [userIds, setUserIds] = useState<number[]>([]);
     const [userNames, setUserNames] = useState<string[]>([]);
@@ -38,7 +35,7 @@ const Admin = () => {
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const data = await getTeachers();
+            const data = await user.getTeachers();
             setUserIds(data.map((user: any) => user.id));
             setUserNames(data.map((user: any) => user.name));
         };
@@ -48,16 +45,20 @@ const Admin = () => {
 
     useEffect(() => {
         const fetchUsersTable = async () => {
-            const dataTeachers = await getTeachers();
+            const dataTeachers = await user.getTeachers();
+            // console.log("Teachers:", dataTeachers);
             setTeacherTable(dataTeachers.map((teacher: any) => ({
+                ra: teacher.RA,
                 name: teacher.name,
-                ra: teacher.ra
+                email: teacher.email
             })));
             
-            const dataStudents = await getStudents();
+            const dataStudents = await user.getStudents();
+            // console.log("Students:", dataStudents);
             setStudentTable(dataStudents.map((student: any) => ({
+                ra: student.RA,
                 name: student.name,
-                ra: student.ra
+                email: student.email
             })));
         };
 
@@ -101,24 +102,6 @@ const Admin = () => {
                 text: `O usuário não foi cadastrado por conta de um erro: ${error}`,
                 icon: "error"
                 })
-        }
-    };
-
-    const getTeachers = async () => {
-        try {
-            const result = await user.getTeachers()
-            return result
-        } catch (error) {
-            console.log(error)
-        }
-    };
-    
-    const getStudents = async () => {
-        try {
-            const result = await user.getStudents()
-            return result
-        } catch (error) {
-            console.log(error)
         }
     };
 
@@ -174,12 +157,12 @@ const Admin = () => {
                 {/* tabela professores */}
                 <h1>Professores</h1>
                 <section>
-                    <Table thList={["Nome", "RA"]} tdList={[]} />
+                    <Table thList={["RA", "Nome", "Email"]} tdList={teacherTable} />
                 </section><br/>
                 {/* tabela alunos */}
                 <h1>Alunos</h1>
                 <section>
-
+                    <Table thList={["RA", "Nome", "Email"]} tdList={studentTable} />
                 </section>
             </div><br/>
             {/* cadastrar matéria */}
@@ -187,10 +170,6 @@ const Admin = () => {
                 <Input labelId={"subjectName"} labelName={"Nome da matéria"} type={"text"} reference={nameSubjectRef} />
                 <Select options={userIds} optionsName={userNames} reference={teacherIdRef} />
                 <Button title={"Cadastrar matéria"} onClick={postSubject} />
-            </div><br/>
-            <div>
-                <Button title={"CACACACACACACA"} onClick={getTeachers} />
-                <Button title={"kakakakkakakaa"} onClick={getStudents} />
             </div>
         </>
     )

@@ -4,7 +4,8 @@ const baseUrl = "/subject";
 
 export default class Subject {
     public async getSubject() {
-        
+        const response = await api.get(`${baseUrl}/`);
+        return response.data.data.rows;
     };
 
     public async postSubject(nameSubject: string, teacherId: string) {

@@ -57,9 +57,7 @@ const Login = () => {
                     <div>
                         <Input labelId={"email"} labelName={"Email"} type={"text"} reference={emailRef} />
                         <Input labelId={"password"} labelName={"Senha"} type={"password"} reference={passwordRef} />
-                        {/* <a href="/admin"> */}
-                            <Button title={"Logar"} onClick={signIn} />
-                        {/* </a> */}
+                        <Button title={"Logar"} onClick={signIn} />
                     </div>
                 </div>
             </div>
