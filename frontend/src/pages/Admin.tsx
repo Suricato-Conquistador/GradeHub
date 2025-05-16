@@ -1,38 +1,81 @@
-import { createRef } from "react";
-import Swal from "sweetalert2";
-import Input from "../components/Input";
+import { UserTable } from "../interfaces/user.interface";
+import { createRef, useEffect, useState } from "react";
+import Subject from "../server/routes/subject";
 import Button from "../components/Button";
 import Select from "../components/Select";
-import Auth from "../server/routes/auth";
 import User from "../server/routes/user";
 import '../style/Admin.scss';
+import Auth from "../server/routes/auth";
+import Input from "../components/Input";
+import Table from "../components/Table";
+import Swal from "sweetalert2";
 
 
+const subject = new Subject();
+const auth = new Auth();
+const user = new User();
 
-const auth = new Auth()
-const user = new User()
 
 const Admin = () => {
-    const nameRef = createRef<HTMLInputElement>()
-    const raRef = createRef<HTMLInputElement>()
-    const emailRef = createRef<HTMLInputElement>()
-    const passwordRef = createRef<HTMLInputElement>()
-    const confPassRef = createRef<HTMLInputElement>()
-    const radioRef = createRef<HTMLInputElement>()
+    const nameRef = createRef<HTMLInputElement>();
+    const raRef = createRef<HTMLInputElement>();
+    const emailRef = createRef<HTMLInputElement>();
+    const passwordRef = createRef<HTMLInputElement>();
+    const confPassRef = createRef<HTMLInputElement>();
+    const [selected, setSelected] = useState('');
 
-    const nameSubjectRef = createRef<HTMLInputElement>()
+    const nameSubjectRef = createRef<HTMLInputElement>();
+    const teacherIdRef = createRef<HTMLSelectElement>();
+
+    const [userIds, setUserIds] = useState<number[]>([]);
+    const [userNames, setUserNames] = useState<string[]>([]);
+
+    const [teacherTable, setTeacherTable] = useState<UserTable[]>([]);
+    const [studentTable, setStudentTable] = useState<UserTable[]>([]);
 
 
-    const signUp = async() => {
-        try {
-            const name = nameRef.current?.value
-            const ra = raRef.current?.value
-            const email = emailRef.current?.value
-            const password = passwordRef.current?.value
-            const confPass = confPassRef.current?.value
-            const radio = radioRef.current?.value
+    useEffect(() => {
+        const fetchUsers = async () => {
+            const data = await user.getTeachers();
+            setUserIds(data.map((user: any) => user.id));
+            setUserNames(data.map((user: any) => user.name));
+        };
+
+        fetchUsers();
+    }, []);
+
+    useEffect(() => {
+        const fetchUsersTable = async () => {
+            const dataTeachers = await user.getTeachers();
+            // console.log("Teachers:", dataTeachers);
+            setTeacherTable(dataTeachers.map((teacher: any) => ({
+                ra: teacher.RA,
+                name: teacher.name,
+                email: teacher.email
+            })));
             
-            if(!name || !ra || !email || !password || !confPass || !radio) {
+            const dataStudents = await user.getStudents();
+            // console.log("Students:", dataStudents);
+            setStudentTable(dataStudents.map((student: any) => ({
+                ra: student.RA,
+                name: student.name,
+                email: student.email
+            })));
+        };
+
+        fetchUsersTable();
+    }, []);
+
+
+    const signUp = async () => {
+        try {
+            const name = nameRef.current?.value;
+            const ra = raRef.current?.value;
+            const email = emailRef.current?.value;
+            const password = passwordRef.current?.value;
+            const confPass = confPassRef.current?.value;
+            
+            if(!name || !ra || !email || !password || !confPass || !selected) {
                 return Swal.fire({
                     title: "Erro",
                     text: "Existe um campo não preenchido",
@@ -46,10 +89,10 @@ const Admin = () => {
                 })
             }
 
-            await auth.signUp(radio, ra, name, email, password, confPass)
-            Swal.fire({
+            await auth.signUp(selected, ra, name, email, password, confPass)
+            return Swal.fire({
                 title: "Sucesso",
-                text: `O usuário foi logado`,
+                text: `O usuário foi cadastrado`,
                 icon: "success"
             })
 
@@ -61,37 +104,43 @@ const Admin = () => {
                 icon: "error"
                 })
         }
-    }
+    };
 
-    const getTeachers = async() => {
+    const postSubject = async () => {
         try {
-
-        } catch (error) {
-            console.log(error)
-            Swal.fire({
-                title: "Erro",
-                text: `O usuário não foi cadastrado por conta de um erro: ${error}`,
-                icon: "error"
-                })
-        }
-    }
-    
-    const getStudents = async() => {
-        try {
+            const nameSubject = nameSubjectRef.current?.value;
+            const teacherId = teacherIdRef.current?.value;
             
+            console.log(nameSubject)
+            console.log(teacherId)
+
+            if(!nameSubject || !teacherId){
+                return Swal.fire({
+                    title: "Erro",
+                    text: "Existe um campo não preenchido",
+                    icon: "warning"
+                });
+            }
+
+            await subject.postSubject(nameSubject, teacherId);
+
+            return Swal.fire({
+                title: "Sucesso",
+                text: `A matéria foi cadastrada`,
+                icon: "success"
+            })
         } catch (error) {
             console.log(error)
             Swal.fire({
                 title: "Erro",
-                text: `O usuário não foi cadastrado por conta de um erro: ${error}`,
+                text: `A matéria não foi cadastrada por conta de um erro: ${error}`,
                 icon: "error"
                 })
         }
-    }
+    };
 
     return(
         <>
-           return (
   <div className="admin-container">
     {/* Área de cadastros lado a lado */}
     <div className="cadastros">
@@ -133,17 +182,16 @@ const Admin = () => {
       <section>
         <h3>Professores</h3>
         {/* tabela professores aqui */}
+        <Table thList={["RA", "Nome", "Email"]} tdList={teacherTable} />
       </section>
 
       <section>
         <h3>Alunos</h3>
         {/* tabela alunos aqui */}
+        <Table thList={["RA", "Nome", "Email"]} tdList={studentTable} />
       </section>
     </div>
   </div>
-);
-
-
         </>
     )
 }
