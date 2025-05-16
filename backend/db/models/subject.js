@@ -27,9 +27,6 @@ const subject = sequelize.define('subjects',
             allowNull: true,
             type: DataTypes.INTEGER,
             validate: {
-                notNull: {
-                    msg: "teacherId cannot be null",
-                  },
                   notEmpty: {
                     msg: "teacherId cannot be empty",
                   },

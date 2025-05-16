@@ -50,9 +50,7 @@ const login = catchAsync(async (req, res, next) => {
         next(new AppError("Please provide email and password", 400));
     }
 
-    const result = await user.findOne({where: { email }});
-    console.log(result);
-
+    const result = await user.findOne({ where: { email }});
     
     if(!result || !(await bcrypt.compare(password, result.password))) {
         return next(new AppError("Incorrect email or password", 401));
@@ -64,6 +62,7 @@ const login = catchAsync(async (req, res, next) => {
 
     return res.json({
         status: 'success',
+        userType: result.userType,
         token,
     });
 });
