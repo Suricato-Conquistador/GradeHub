@@ -24,38 +24,39 @@ const createSubject = catchAsync(async (req, res, next) => {
 const getAllSubjects = catchAsync(async (req, res, next) => {
     const userId = req.user.id;
 
-    const userData = await user.findByPk(userId);
+    const userData = await user.findByPk(userId, { where: { deletedAt: null}});
     const userType = userData.userType;
 
-    if(userType === '1') {
-        let result = await subject.findAll({ include: user, where: { teacherId: userId } });
+    let result = [];
 
-        return res.json({
-            status: 'success',
-            data: result
+    if(userType === '1') {
+        result = await subject.findAll({ 
+            where: { teacherId: userId, deletedAt: null }, 
+            attributes: { exclude: ['deletedAt']} 
         });
     } else if(userType === '2') {
-        let result = await subject.findAll({ include: user, where: { studentId: userId } });
-    
-        return res.json({
-            status: 'success',
-            data: result
+        result = await subject.findAll({ 
+            where: { studentId: userId, deletedAt: null },
+            attributes: { exclude: ['deletedAt']}
         });
     } else {
-        let result = await subject.findAll({ include: user });
-        
-        return res.json({
-            status: 'success',
-            data: result
+        result = await subject.findAll({ 
+            where: { deletedAt: null },
+            attributes: { exclude: ['deletedAt']}
         });
     }
+    
+    return res.json({
+        status: 'success',
+        data: result
+    });
 });
 
 
 
 const getSubjectById = catchAsync(async (req, res, next) => {
     const subjectId = req.params.id;
-    const result = await subject.findByPk(subjectId, { include: user });
+    const result = await subject.findByPk(subjectId, { where: { deletedAt: null}});
 
     if(!result) {
         return next(new AppError("Invalid subject id", 400));
@@ -71,14 +72,19 @@ const updateSubject = catchAsync(async (req, res, next) => {
     const id = req.params.id;
     const body = req.body;
 
-    const result = await subject.findOne({ where: { id: id }});
+    const result = await subject.findOne({ where: { id: id, deletedAt: null }});
 
     if(!result) {
         return next(new AppError("Invalid subject id", 400));
     }
 
-    result.name = body.name;
-    result.teacherId = body.teacherId;
+    if(body.name) {
+        result.name = body.name;
+    }
+
+    if(body.teacherId) {
+        result.teacherId = body.teacherId;
+    }
 
     const updatedResult = await result.save();
 
@@ -91,7 +97,7 @@ const updateSubject = catchAsync(async (req, res, next) => {
 const deleteSubject = catchAsync(async (req, res, next) => {
     const id = req.params.id;
     
-    const result = await subject.findOne({ where: { id: id } });
+    const result = await subject.findOne({ where: { id: id, deletedAt: null } });
 
     if(!result) {
         return next(new AppError("Invalid subject id", 400));
