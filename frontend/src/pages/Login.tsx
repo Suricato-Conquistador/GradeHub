@@ -1,16 +1,19 @@
+import { useNavigate } from "react-router";
 import { createRef } from "react";
 import Swal from "sweetalert2";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import Auth from "../server/routes/auth";
 
-const auth = new Auth()
+const auth = new Auth();
 
 const Login = () => {
-    const emailRef = createRef<HTMLInputElement>()
-    const passwordRef = createRef<HTMLInputElement>()
+    const emailRef = createRef<HTMLInputElement>();
+    const passwordRef = createRef<HTMLInputElement>();
 
-    const signIn = async() => {
+    const navigate = useNavigate();
+
+    const signIn = async () => {
         try {
             const email = emailRef.current?.value
             const password = passwordRef.current?.value
@@ -26,11 +29,13 @@ const Login = () => {
             const token = await auth.login(email, password)
             console.log(token.token)
             sessionStorage.setItem("authentication", token.token)
+            
             Swal.fire({
                 title: "Sucesso",
                 text: `O usuário foi logado`,
                 icon: "success"
             })
+            navigate('/admin')
         } catch (error) {
             console.log(error)
             Swal.fire({
@@ -39,7 +44,7 @@ const Login = () => {
                 icon: "error"
               })
         }
-    }
+    };
 
     return(
         <div className="content">
@@ -52,14 +57,14 @@ const Login = () => {
                     <div>
                         <Input labelId={"email"} labelName={"Email"} type={"text"} reference={emailRef} />
                         <Input labelId={"password"} labelName={"Senha"} type={"password"} reference={passwordRef} />
-                        <a href="/admin">
+                        {/* <a href="/admin"> */}
                             <Button title={"Logar"} onClick={signIn} />
-                        </a>
+                        {/* </a> */}
                     </div>
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Login;

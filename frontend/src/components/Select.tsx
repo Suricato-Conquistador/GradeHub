@@ -1,5 +1,5 @@
 type Props = {
-    options: string[];
+    options: number[];
     optionsName: string[];
     reference?: any;
     classname?: string;
@@ -8,7 +8,8 @@ type Props = {
 
 const Select = (props: Props) => {
     return(
-        <select className={props.classname} ref={props.reference}>
+        <select defaultValue={""} ref={props.reference} className={props.classname}>
+            <option value="" disabled>Selecione o professor</option>
             {props.options.map((value, index) => (
             <option key={value} value={value}>
                 {props.optionsName[index]}
