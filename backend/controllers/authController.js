@@ -18,7 +18,6 @@ const signup = catchAsync(async (req, res, next) => {
         throw new AppError("Invalid user type", 400);
     }
 
-    console.log(body.userType)
     const newUser = await user.create({
         userType: body.userType,
         RA:body.RA,

@@ -24,7 +24,7 @@ const subject = sequelize.define('subjects',
             },
         },
         teacherId: {
-            allowNull: false,
+            allowNull: true,
             type: DataTypes.INTEGER,
             validate: {
                 notNull: {

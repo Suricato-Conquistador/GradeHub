@@ -26,36 +26,37 @@ const createGrade = catchAsync(async (req, res, next) => {
 const getAllGrades = catchAsync(async (req, res, next) => {
     const userId = req.user.id;
     
-    const userData = await user.findByPk(userId);
+    const userData = await user.findByPk(userId, { where: { deletedAt: null}});
     const userType = userData.userType;
 
+    let result = [];
+
     if(userType === '1') {
-        let result = await grade.findAll({ include: user, where: { teacherId: userId } });
-        
-        return res.json({ 
-            status: 'success', 
-            data: result 
+        result = await grade.findAll({ 
+            where: { teacherId: userId, deletedAt: null },
+            attributes: { exclude: ['deletedAt']}
         });
     } else if(userType === '2') {
-        let result = await grade.findAll({ include: user, where: { studentId: userId }});
-    
-        return res.json({
-            status: 'success',
-            data: result
+        result = await grade.findAll({
+            where: { studentId: userId, deletedAt: null },
+            attributes: { exclude: ['deletedAt']}
         });
     } else {
-        let result = await grade.findAll({ include: user })
-    
-        return res.json({
-            status: 'success',
-            data: result
-        });
+        result = await grade.findAll({
+            where: { deletedAt: null },
+            attributes: { exclude: ['deletedAt']}
+        })
     }
+    
+    return res.json({
+        status: 'success',
+        data: result
+    });
 });
 
 const getGradeById = catchAsync(async (req, res, next) => {
     const gradeId = req.params.id;
-    const result = await grade.findByPk(gradeId, { include: user });
+    const result = await grade.findByPk(gradeId, { where: { deletedAt: null }});
 
     if(!result) {
         return next(new AppError("Invalid grade id", 400));
@@ -82,23 +83,31 @@ const updateGrade = catchAsync(async (req, res, next) => {
     const teacherId = req.user.id;
     const body = req.body;
 
-    const result = await grade.findOne({ where: { id: id, teacherId: teacherId }});
+    const result = await grade.findOne({ where: { id: id, teacherId: teacherId, deletedAt: null }});
 
     if(!result) {
         return next(new AppError("Invalid grade id", 400));
     }
 
-    result.grade = body.grade;
-    result.subject = body.subject;
-    result.teacherId = teacherId;
-    
-    const result2 = await user.findByPk(result.studentId);
-    
-    if(!result2) {
-        return next(new AppError("Invalid student id", 400));
+    if(body.grade) {
+        result.grade = body.grade;
     }
 
-    result.studentId = body.studentId;
+    if(body.subject) {
+        result.subject = body.subject;
+    }
+
+    result.teacherId = teacherId;
+
+    if(body.studentId) {
+        const result2 = await user.findByPk(body.studentId, { where: { deletedAt: null }});
+        
+        if(!result2) {
+            return next(new AppError("Invalid student id", 400));
+        }
+    
+        result.studentId = body.studentId;
+    }
 
     const updatedResult = await result.save();
 
@@ -112,7 +121,7 @@ const deleteGrade = catchAsync(async (req, res, next) => {
     const id = req.params.id;
     const teacherId = req.user.id;
 
-    const result = await grade.findOne({ where: { id: id, teacherId: teacherId }});
+    const result = await grade.findOne({ where: { id: id, teacherId: teacherId, deletedAt: null }});
 
     if(!result) {
         return next(new AppError("Invalid grade id", 400));

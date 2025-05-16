@@ -2,6 +2,7 @@ const { Op } = require('sequelize');
 const user = require('../db/models/user');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const bcrypt = require('bcrypt');
 
 const getAllUsers = catchAsync(async (req, res, next) => {
     const users = await user.findAndCountAll({
@@ -19,7 +20,7 @@ const getUsersByRole = catchAsync(async (req, res, next) => {
     const userType = req.params.userType;
 
     const users = await user.findAndCountAll({
-        where: { userType: userType },
+        where: { userType: userType, deletedAt: null },
         attributes: { exclude: ['userType', 'password', 'deletedAt'] },
     });
 
@@ -61,10 +62,18 @@ const updateUser = catchAsync(async (req, res, next) => {
         return next(new AppError("Invalid user id", 400));
     }
 
-    result.name = body.name;
-    result.email = body.email;
-    //Não há criptografia de senha
-    result.password = body.password;
+    if(body.name) {
+        result.name = body.name;
+    }
+
+    if(body.email) {
+        result.email = body.email;
+    }
+
+    if(body.password) {
+        const hashPassword = bcrypt.hashSync(body.password, 10);
+        result.password = hashPassword;
+    }
 
     const updatedResult = await result.save();
 
