@@ -4,6 +4,7 @@ import Subject from "../server/routes/subject";
 import Button from "../components/Button";
 import Select from "../components/Select";
 import User from "../server/routes/user";
+import '../style/Admin.scss';
 import Auth from "../server/routes/auth";
 import Input from "../components/Input";
 import Table from "../components/Table";
@@ -140,37 +141,57 @@ const Admin = () => {
 
     return(
         <>
-            {/* criação de usuario */}
-            <div>
-                <Input labelId={"name"} labelName={"Nome"} type={"text"} reference={nameRef} />
-                <Input labelId={"ra"} labelName={"RA"} type={"text"} reference={raRef} />
-                <Input labelId={"email"} labelName={"Email"} type={"email"} reference={emailRef} />
-                <Input labelId={"password"} labelName={"Senha"} type={"password"} reference={passwordRef} />
-                <Input labelId={"confirmPassword"} labelName={"Confirme a senha"} type={"password"} reference={confPassRef} />
+  <div className="admin-container">
+    {/* Área de cadastros lado a lado */}
+    <div className="cadastros">
+      
+      {/* Cadastro de Aluno/Professor */}
+      <div className="cadastro-user">
+        <h2>Cadastro Aluno / Professor</h2>
+        <Input labelId="name" labelName="Nome" type="text" reference={nameRef} />
+        <Input labelId="ra" labelName="RA" type="text" reference={raRef} />
+        <Input labelId="email" labelName="Email" type="email" reference={emailRef} />
+        <Input labelId="password" labelName="Senha" type="password" reference={passwordRef} />
+        <Input labelId="confirmPassword" labelName="Confirme a senha" type="password" reference={confPassRef} />
 
-                <Input labelId={"teacher"} labelName={"Professor"} type={"radio"} name={"choice"} value={"1"} onChange={(e: any) => setSelected(e.target.value)} checked={selected === "1"} />
-                <Input labelId={"student"} labelName={"Aluno"} type={"radio"} name={"choice"} value={"2"} onChange={(e: any) => setSelected(e.target.value)} checked={selected === "2"} />
-                <Button title={"Cadastrar usuário"} onClick={signUp} />
-            </div><br/>
+        <div className="radio-group">
+          <label>
+            <Input labelId="teacher" labelName="Professor" type="radio" name="choice" reference={radioRef} value="1" />
+            
+          </label>
+          <label>
+            <Input labelId="student" labelName="Aluno" type="radio" name="choice" reference={radioRef} value="2" />
+            
+          </label>
+        </div>
 
-            <div>
-                {/* tabela professores */}
-                <h1>Professores</h1>
-                <section>
-                    <Table thList={["RA", "Nome", "Email"]} tdList={teacherTable} />
-                </section><br/>
-                {/* tabela alunos */}
-                <h1>Alunos</h1>
-                <section>
-                    <Table thList={["RA", "Nome", "Email"]} tdList={studentTable} />
-                </section>
-            </div><br/>
-            {/* cadastrar matéria */}
-            <div>
-                <Input labelId={"subjectName"} labelName={"Nome da matéria"} type={"text"} reference={nameSubjectRef} />
-                <Select options={userIds} optionsName={userNames} reference={teacherIdRef} />
-                <Button title={"Cadastrar matéria"} onClick={postSubject} />
-            </div>
+        <Button title="Cadastrar usuário" onClick={signUp} />
+      </div>
+
+      {/* Cadastro de Matéria */}
+      <div className="cadastro-materia">
+        <h2>Cadastro Matéria</h2>
+        <Input labelId="subjectName" labelName="Nome da matéria" type="text" reference={nameSubjectRef} />
+        <Select options={[]} optionsName={[]} />
+        <Button title="Cadastrar matéria" />
+      </div>
+    </div>
+
+    {/* Área de tabelas abaixo */}
+    <div className="tabelas">
+      <section>
+        <h3>Professores</h3>
+        {/* tabela professores aqui */}
+        <Table thList={["RA", "Nome", "Email"]} tdList={teacherTable} />
+      </section>
+
+      <section>
+        <h3>Alunos</h3>
+        {/* tabela alunos aqui */}
+        <Table thList={["RA", "Nome", "Email"]} tdList={studentTable} />
+      </section>
+    </div>
+  </div>
         </>
     )
 }
