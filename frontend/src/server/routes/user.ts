@@ -11,7 +11,7 @@ export default class User {
 
     public async getStudents() {
         const response = await api.get(`${baseUrl}/userType/2`);
-        // console.log(response.data.data.rows);
+        console.log(response.data.data.rows);
         return response.data.data.rows;
     };
   

@@ -7,8 +7,8 @@ import Auth from "../server/routes/auth";
 import '../style/Login.scss';
 
 
-
 const auth = new Auth();
+
 
 const Login = () => {
     const emailRef = createRef<HTMLInputElement>();
@@ -18,32 +18,37 @@ const Login = () => {
 
     const signIn = async () => {
         try {
-            const email = emailRef.current?.value
-            const password = passwordRef.current?.value
+            const email = emailRef.current?.value;
+            const password = passwordRef.current?.value;
 
-            if(!email || !password) {
+            if (!email || !password) {
                 return Swal.fire({
                     title: "Erro",
                     text: "Existe um campo não preenchido",
                     icon: "warning"
-                })
+                });
             }
 
-            const token = await auth.login(email, password)
-            console.log(token.token)
-            sessionStorage.setItem("authentication", token.token)
+            const response = await auth.login(email, password);
+            console.log(response);
+            console.log(response.userType);
+            sessionStorage.setItem("authentication", response.token);
             
             Swal.fire({
                 title: "Sucesso",
                 text: `O usuário foi logado`,
                 icon: "success"
-            })
-            navigate('/admin')
+            });
+
+            if (response.userType === "0") navigate("/admin")
+            if (response.userType === "1") navigate("/teacher")
+            if (response.userType === "2") navigate("/student")
+
         } catch (error) {
             console.log(error)
             Swal.fire({
                 title: "Erro",
-                text: `O usuário não foi cadastrado por conta de um erro: ${error}`,
+                text: `O usuário não foi logado por conta de um erro: ${error}`,
                 icon: "error"
               })
         }
