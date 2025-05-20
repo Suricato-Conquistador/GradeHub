@@ -90,11 +90,19 @@ const Admin = () => {
             }
 
             await auth.signUp(selected, ra, name, email, password, confPass)
+
+            if (nameRef.current) nameRef.current.value = "";
+            if (raRef.current) raRef.current.value = "";
+            if (emailRef.current) emailRef.current.value = "";
+            if (passwordRef.current) passwordRef.current.value = "";
+            if (confPassRef.current) confPassRef.current.value = "";
+            setSelected("");
+
             return Swal.fire({
                 title: "Sucesso",
                 text: `O usuário foi cadastrado`,
                 icon: "success"
-            })
+            });
 
         } catch (error) {
             console.log(error)
@@ -102,7 +110,7 @@ const Admin = () => {
                 title: "Erro",
                 text: `O usuário não foi cadastrado por conta de um erro: ${error}`,
                 icon: "error"
-                })
+            });
         }
     };
 
@@ -124,6 +132,9 @@ const Admin = () => {
 
             await subject.postSubject(nameSubject, teacherId);
 
+            if (nameSubjectRef.current) nameSubjectRef.current.value = "";
+            if (teacherIdRef.current) teacherIdRef.current.value = "";
+
             return Swal.fire({
                 title: "Sucesso",
                 text: `A matéria foi cadastrada`,
@@ -140,60 +151,50 @@ const Admin = () => {
     };
 
     return(
-        <>
-  <div className="admin-container">
-    {/* Área de cadastros lado a lado */}
-    <div className="cadastros">
-      
-      {/* Cadastro de Aluno/Professor */}
-      <div className="cadastro-user">
-        <h2>Cadastro Aluno / Professor</h2>
-        <Input labelId="name" labelName="Nome" type="text" reference={nameRef} />
-        <Input labelId="ra" labelName="RA" type="text" reference={raRef} />
-        <Input labelId="email" labelName="Email" type="email" reference={emailRef} />
-        <Input labelId="password" labelName="Senha" type="password" reference={passwordRef} />
-        <Input labelId="confirmPassword" labelName="Confirme a senha" type="password" reference={confPassRef} />
+        <div className="admin-container">
+            <div className="cadastros">
 
-        <div className="radio-group">
-          <label>
-            <Input labelId="teacher" labelName="Professor" type="radio" name="choice" reference={radioRef} value="1" />
-            
-          </label>
-          <label>
-            <Input labelId="student" labelName="Aluno" type="radio" name="choice" reference={radioRef} value="2" />
-            
-          </label>
+                <div className="cadastro-user">
+                    <h2>Cadastro Aluno / Professor</h2>
+                    <Input labelId="name" labelName="Nome" type="text" reference={nameRef} />
+                    <Input labelId="ra" labelName="RA" type="text" reference={raRef} />
+                    <Input labelId="email" labelName="Email" type="email" reference={emailRef} />
+                    <Input labelId="password" labelName="Senha" type="password" reference={passwordRef} />
+                    <Input labelId="confirmPassword" labelName="Confirme a senha" type="password" reference={confPassRef} />
+
+                    <div className="radio-group">
+                        <label>
+                            <Input labelId="teacher" labelName="Professor" type="radio" name="choice" value="1" onChange={(e: any) => setSelected(e.target.value)} checked={selected === "1"} />
+                        </label>
+                        <label>
+                            <Input labelId="student" labelName="Aluno" type="radio" name="choice" value="2" onChange={(e: any) => setSelected(e.target.value)} checked={selected === "2"}/>
+                        </label>
+                    </div>
+
+                    <Button title="Cadastrar usuário" onClick={signUp} />
+                </div>
+
+                <div className="cadastro-materia">
+                    <h2>Cadastro Matéria</h2>
+                    <Input labelId="subjectName" labelName="Nome da matéria" type="text" reference={nameSubjectRef} />
+                    <Select options={userIds} optionsName={userNames} title="Selecione o professor" reference={teacherIdRef} />
+                    <Button title="Cadastrar matéria" onClick={postSubject} />
+                </div>
+            </div>
+
+            <div className="tabelas">
+                <section>
+                    <h3>Professores</h3>
+                    <Table thList={["RA", "Nome", "Email"]} tdList={teacherTable} />
+                </section>
+
+                <section>
+                    <h3>Alunos</h3>
+                    <Table thList={["RA", "Nome", "Email"]} tdList={studentTable} />
+                </section>
+            </div>
         </div>
-
-        <Button title="Cadastrar usuário" onClick={signUp} />
-      </div>
-
-      {/* Cadastro de Matéria */}
-      <div className="cadastro-materia">
-        <h2>Cadastro Matéria</h2>
-        <Input labelId="subjectName" labelName="Nome da matéria" type="text" reference={nameSubjectRef} />
-        <Select options={[]} optionsName={[]} />
-        <Button title="Cadastrar matéria" />
-      </div>
-    </div>
-
-    {/* Área de tabelas abaixo */}
-    <div className="tabelas">
-      <section>
-        <h3>Professores</h3>
-        {/* tabela professores aqui */}
-        <Table thList={["RA", "Nome", "Email"]} tdList={teacherTable} />
-      </section>
-
-      <section>
-        <h3>Alunos</h3>
-        {/* tabela alunos aqui */}
-        <Table thList={["RA", "Nome", "Email"]} tdList={studentTable} />
-      </section>
-    </div>
-  </div>
-        </>
-    )
-}
+    );
+};
 
 export default Admin;
