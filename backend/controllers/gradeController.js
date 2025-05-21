@@ -136,8 +136,4 @@ const deleteGrade = catchAsync(async (req, res, next) => {
     });
 });
 
-const deleteGradeBackup = catchAsync(async (req, res, next) => {
-    await grade.destroy({ where: { deletedAt: { [Op.ne]: null }}});
-});
-
-module.exports = { createGrade, getAllGrades, getGradeById, getGradeByStudent, updateGrade, deleteGrade, deleteGradeBackup };
+module.exports = { createGrade, getAllGrades, getGradeById, getGradeByStudent, updateGrade, deleteGrade };

@@ -6,7 +6,7 @@ module.exports = {
     const users = [
       {
         userType: "0",
-        RA: "1234567890",
+        userCode: "1234567890123",
         name: "Admin",
         email: process.env.ADMIN_EMAIL,
         password: password,
@@ -15,7 +15,7 @@ module.exports = {
       },
       {
         userType: "1",
-        RA: "1111111111",
+        userCode: "1111111111111",
         name: "Rubens da Costa",
         email: "rubens@gmail.com",
         password: "rubens123",
@@ -24,7 +24,7 @@ module.exports = {
       },
       {
         userType: "1",
-        RA: "1111111112",
+        userCode: "2222222222222",
         name: "Vitor Henrique",
         email: "vitor@gmail.com",
         password: "vitor123",
@@ -33,7 +33,7 @@ module.exports = {
       },
       {
         userType: "2",
-        RA: "2222222222",
+        userCode: "3333333333333",
         name: "João Eduardo",
         email: "joao@gmail.com",
         password: "joao123",
@@ -42,7 +42,7 @@ module.exports = {
       },
       {
         userType: "2",
-        RA: "2222222223",
+        userCode: "4444444444444",
         name: "Sandro Roberto",
         email: "sandro@gmail.com",
         password: "sandro123",

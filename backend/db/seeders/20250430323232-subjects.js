@@ -1,6 +1,5 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    let password = process.env.ADMIN_PASSWORD;
     const subjects = [
       {
         name: "História",
