@@ -53,8 +53,8 @@ const getUserById = catchAsync(async (req, res, next) => {
 });
 
 const updateUser = catchAsync(async (req, res, next) => {
-    const id = req.params.id;
-    const body = req.body;
+    const { id } = req.params;
+    const { body } = req;
 
     const result = await user.findOne({ where: { id: id, deletedAt: null }});
 
@@ -90,7 +90,7 @@ const updateUser = catchAsync(async (req, res, next) => {
 });
 
 const deleteUser = catchAsync(async (req, res, next) => {
-    const id = req.params.id;
+    const { id } = req.params;
 
     const result = await user.findOne({ where: { id: id }});
     
@@ -107,7 +107,20 @@ const deleteUser = catchAsync(async (req, res, next) => {
 });
 
 const deleteUserBackup = catchAsync(async (req, res, next) => {
-    await user.destroy({ where: { deletedAt: { [Op.ne]: null }}});
+    const result = await user.findAll({ where: { deletedAt: { [Op.ne]: null }}});
+
+    result.forEach((user) => {
+        user.name = null;
+        user.email = null;
+        user.userType = null;
+        user.userCode = null;
+        user.password = null;
+    });
+
+    return res.json({
+        status: 'success',
+        message: 'Database updated successfully',
+    });
 });
 
 module.exports = { getAllUsers, getUsersByRole, getUserById, updateUser, deleteUser, deleteUserBackup };

@@ -11,12 +11,9 @@ const grade = sequelize.define('grades',
       type: DataTypes.INTEGER,
     },
     grade: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.DECIMAL,
       validate: {
-        notNull: {
-          msg: "grade cannot be null",
-        },
         notEmpty: {
           msg: "grade cannot be empty",
         },
@@ -26,24 +23,18 @@ const grade = sequelize.define('grades',
       },
     },
     subjectId: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.INTEGER,
       validate: {
-        notNull: {
-          msg: "subject cannot be null",
-        },
         notEmpty: {
           msg: "subject cannot be empty",
         },
       },
     },
     studentId: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.INTEGER,
       validate: {
-        notNull: {
-          msg: "studentId cannot be null",
-        },
         notEmpty: {
           msg: "studentId cannot be empty",
         },

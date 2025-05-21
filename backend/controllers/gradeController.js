@@ -5,12 +5,13 @@ const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
 const createGrade = catchAsync(async (req, res, next) => {
-    const body = req.body;
+    const { body } = req;
+    const { id } = req.user;
 
     const newGrade = await grade.create({
-        grade: body.grade,
+        grade: null,
         subjectId: body.subjectId,
-        studentId: body.studentId
+        studentId: id,
     });
 
     const result = newGrade.toJSON();
@@ -24,21 +25,21 @@ const createGrade = catchAsync(async (req, res, next) => {
 });
 
 const getAllGrades = catchAsync(async (req, res, next) => {
-    const userId = req.user.id;
+    const { id } = req.user;
     
-    const userData = await user.findByPk(userId, { where: { deletedAt: null}});
+    const userData = await user.findByPk(id, { where: { deletedAt: null}});
     const userType = userData.userType;
 
     let result = [];
 
     if(userType === '1') {
         result = await grade.findAll({ 
-            where: { teacherId: userId, deletedAt: null },
+            where: { teacherId: id, deletedAt: null },
             attributes: { exclude: ['deletedAt']}
         });
     } else if(userType === '2') {
         result = await grade.findAll({
-            where: { studentId: userId, deletedAt: null },
+            where: { studentId: id, deletedAt: null },
             attributes: { exclude: ['deletedAt']}
         });
     } else {
@@ -55,8 +56,8 @@ const getAllGrades = catchAsync(async (req, res, next) => {
 });
 
 const getGradeById = catchAsync(async (req, res, next) => {
-    const gradeId = req.params.id;
-    const result = await grade.findByPk(gradeId, { where: { deletedAt: null }});
+    const { id } = req.params;
+    const result = await grade.findByPk(id, { where: { deletedAt: null }});
 
     if(!result) {
         return next(new AppError("Invalid grade id", 400));
@@ -69,8 +70,8 @@ const getGradeById = catchAsync(async (req, res, next) => {
 });
 
 const getGradeByStudent = catchAsync(async (req, res, next) => {
-    const studentId = req.params.id;
-    const result = await grade.findAndCountAll({ where: { studentId: studentId, deletedAt: null }});
+    const { id } = req.params;
+    const result = await grade.findAndCountAll({ where: { studentId: id, deletedAt: null }});
 
     return res.json({
         status: 'success',
@@ -79,9 +80,9 @@ const getGradeByStudent = catchAsync(async (req, res, next) => {
 })
 
 const updateGrade = catchAsync(async (req, res, next) => {
-    const id = req.params.id;
+    const { id } = req.params;
     const teacherId = req.user.id;
-    const body = req.body;
+    const { body } = req;
 
     const result = await grade.findOne({ where: { id: id, teacherId: teacherId, deletedAt: null }});
 
@@ -118,10 +119,10 @@ const updateGrade = catchAsync(async (req, res, next) => {
 });
 
 const deleteGrade = catchAsync(async (req, res, next) => {
-    const id = req.params.id;
-    const teacherId = req.user.id;
+    const { id } = req.params;
+    const studentId = req.user.id;
 
-    const result = await grade.findOne({ where: { id: id, teacherId: teacherId, deletedAt: null }});
+    const result = await grade.findOne({ where: { id: id, studentId: studentId, deletedAt: null }});
 
     if(!result) {
         return next(new AppError("Invalid grade id", 400));
@@ -135,8 +136,4 @@ const deleteGrade = catchAsync(async (req, res, next) => {
     });
 });
 
-const deleteGradeBackup = catchAsync(async (req, res, next) => {
-    await grade.destroy({ where: { deletedAt: { [Op.ne]: null }}});
-});
-
-module.exports = { createGrade, getAllGrades, getGradeById, getGradeByStudent, updateGrade, deleteGrade, deleteGradeBackup };
+module.exports = { createGrade, getAllGrades, getGradeById, getGradeByStudent, updateGrade, deleteGrade };
