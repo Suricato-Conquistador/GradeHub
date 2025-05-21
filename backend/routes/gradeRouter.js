@@ -3,11 +3,11 @@ const { createGrade, getAllGrades, getGradeById, updateGrade, deleteGrade, getGr
 
 const router = require('express').Router();
 
-router.route('/').post(authentication, restrictTo('1'), createGrade);
+router.route('/').post(authentication, restrictTo('0'), createGrade);
 router.route('/').get(authentication, getAllGrades);
 router.route('/:id').get(authentication, getGradeById);
 router.route('/student/:id').get(authentication, getGradeByStudent);
 router.route('/:id').patch(authentication, restrictTo('1'), updateGrade);
-router.route('/:id').delete(authentication, restrictTo('1'), deleteGrade);
+router.route('/:id').delete(authentication, restrictTo('0'), deleteGrade);
 
 module.exports = router;

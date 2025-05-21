@@ -6,15 +6,15 @@ const sequelize = require('../../config/database');
 const SubjectStudentsView = sequelize.define('SubjectStudentsView', {
   student_id: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: true
   },
   student_name: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   student_ra: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   grade: {
     type: DataTypes.FLOAT,
@@ -22,11 +22,11 @@ const SubjectStudentsView = sequelize.define('SubjectStudentsView', {
   },
   subject_id: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: true
   },
   subject_name: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   }
 }, {
   tableName: 'subject_students_view',

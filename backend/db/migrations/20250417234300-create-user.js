@@ -13,7 +13,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.ENUM('0', '1', '2')
       },
-      RA: {
+      userCode: {
         allowNull: false,
         type: Sequelize.STRING
       },

@@ -12,12 +12,9 @@ const subject = sequelize.define('subjects',
             type: DataTypes.INTEGER,
         },
         name: {
-            allowNull: false,
+            allowNull: true,
             type: DataTypes.STRING,
             validate: {
-                notNull: {
-                    msg: "name cannot be null",
-                },
                 notEmpty: {
                     msg: "name cannot be empty",
                 },
@@ -45,8 +42,8 @@ const subject = sequelize.define('subjects',
           },
     },
     {
-        paranoid: true,
-        freezeTableName: true,
+        paranoid: true, // Soft delete
+        freezeTableName: true, // Desabilita a pluralização
         modelName: 'subjects'
     }
 );
