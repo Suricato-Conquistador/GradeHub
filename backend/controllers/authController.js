@@ -23,7 +23,7 @@ const generateUserCode = () => {
 const signup = catchAsync(async (req, res, next) => {
     const { body } = req;
 
-    if(!['1', '2'].includes(userType)) {
+    if(!['1', '2'].includes(body.userType)) {
         return next(new AppError("Invalid userType", 400));
     }
 

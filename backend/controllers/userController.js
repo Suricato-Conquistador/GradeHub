@@ -34,10 +34,9 @@ const getUsersByRole = catchAsync(async (req, res, next) => {
     });
 });
 
-//Pegar pelo dono da requisição, sem uso de params
 const getUserById = catchAsync(async (req, res, next) => {
-    const userId = req.params.id;
-    const result = await user.findByPk(userId, { 
+    const { id } = req.params;
+    const result = await user.findByPk(id, { 
         where: { deletedAt: null }, 
         attributes: { exclude: ['userType', 'password', 'deletedAt'] },
     });
