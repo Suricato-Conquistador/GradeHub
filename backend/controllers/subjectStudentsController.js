@@ -24,10 +24,10 @@ const getStudentsBySubjectId = catchAsync(async (req, res, next) => {
 });
 
 const getSubjectsByStudentId = catchAsync(async (req, res, next) => {
-    const { studentId } = req.params;
+    const { id } = req.user;
 
     const result = await subjectStudentsView.findAll({
-        where: { student_id: studentId }
+        where: { student_id: id }
     });
 
     return res.status.json({
