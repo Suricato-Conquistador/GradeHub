@@ -4,7 +4,7 @@ const { getSubjectStudentsView, getStudentsBySubjectId, getSubjectsByStudentId }
 const router = require('express').Router();
 
 router.route('/').get(authentication, restrictTo('0'), getSubjectStudentsView);
+router.route('/student').get(authentication, restrictTo('2'), getSubjectsByStudentId);
 router.route('/:subjectId').get(authentication, restrictTo('1'), getStudentsBySubjectId);
-router.route('/student/:studentId').get(authentication, restrictTo('2'), getSubjectsByStudentId);
 
 module.exports = router;
