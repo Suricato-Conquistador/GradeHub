@@ -111,6 +111,9 @@ const Admin = () => {
         try {
             const nameSubject = nameSubjectRef.current?.value;
             const teacherId = teacherIdRef.current?.value;
+
+            console.log(userIds); // Deve imprimir algo como [1, 2, 3]
+
             
             console.log(nameSubject)
             console.log(teacherId)

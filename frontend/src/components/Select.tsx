@@ -3,7 +3,7 @@ import { SelectProps } from "../interfaces/select.interface";
 
 const Select = (props: SelectProps) => {
     return(
-        <select value={props.value ?? ""} ref={props.reference} className={props.classname} onChange={props.onChange}>
+        <select className={props.classname} onChange={props.onChange} ref={props.reference}>
             <option value="" disabled>{props.title}</option>
             {props.options.map((value, index) => (
             <option key={value} value={value}>
