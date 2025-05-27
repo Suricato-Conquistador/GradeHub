@@ -9,12 +9,15 @@ import '../style/Login.scss';
 
 const auth = new Auth();
 
-
 const Login = () => {
     const emailRef = createRef<HTMLInputElement>();
     const passwordRef = createRef<HTMLInputElement>();
 
     const navigate = useNavigate();
+
+    const toRegisterPage = () => {
+        navigate("/register");
+    };
 
     const signIn = async () => {
         try {
@@ -56,16 +59,14 @@ const Login = () => {
 
     return(
         <div className="content">
-            
-
             <div className="p-rt">
                 <div className="box">
                     <h1>LOGIN</h1>
-
                     <div>
                         <Input labelId={"email"} labelName={"Email"} type={"text"} reference={emailRef} />
                         <Input labelId={"password"} labelName={"Senha"} type={"password"} reference={passwordRef} />
                         <Button title={"Logar"} onClick={signIn} />
+                        <Button title={"Ainda não possui uma conta?"} onClick={toRegisterPage} />
                     </div>
                 </div>
             </div>

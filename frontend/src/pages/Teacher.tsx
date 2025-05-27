@@ -21,7 +21,7 @@ const Teacher = () => {
 
     useEffect(() => {
         const fetchSubjects = async () => {
-            const data = await subject.getSubject();
+            const data = await subject.getSubjects();
             const safeData = Array.isArray(data) ? data : [];
             setSubjectIds(safeData.map((subject: any) => subject.id));
             setSubjectNames(safeData.map((subject: any) => subject.name));
@@ -31,21 +31,22 @@ const Teacher = () => {
     }, []);
 
     useEffect(() => {
+        console.log("selectedSubjectId mudou para:", selectedSubjectId);
         if (selectedSubjectId === null) return;
 
         const fetchGradesForSubject = async () => {
-            // Aqui você deve implementar o método para buscar as notas baseadas no subjectId selecionado.
-            const dataStudent = await user.getStudents()
-            console.log(dataStudent)
-            // getNameRa Aluno
-            // get nota
+            console.log("Buscando dados para subjectId:", selectedSubjectId);
+            const a = user.getStudentsBySubjectId(selectedSubjectId);
+            console.log("getStudentsBySubjectId result:", a);
+            const dataStudent = await user.getStudents();
+            console.log("getStudents result:", dataStudent);
         };
 
         fetchGradesForSubject();
     }, [selectedSubjectId]);
 
     const postGrade = async () => {
-
+        
     }
 
     return(
@@ -54,6 +55,7 @@ const Teacher = () => {
             <div>
                 <Select options={subjectIds} optionsName={subjectNames} title="Selecione a matéria" 
                 onChange={(e: any) => setSelectedSubjectId(Number(e.target.value))} />
+                <button onClick={() => setSelectedSubjectId(1)}>Set Subject 1</button>
             </div>
             <div>
                 <Table thList={[]} tdList={[]} />

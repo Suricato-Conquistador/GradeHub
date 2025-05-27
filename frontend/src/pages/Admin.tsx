@@ -15,14 +15,11 @@ const subject = new Subject();
 const auth = new Auth();
 const user = new User();
 
-
 const Admin = () => {
     const nameRef = createRef<HTMLInputElement>();
-    const raRef = createRef<HTMLInputElement>();
     const emailRef = createRef<HTMLInputElement>();
     const passwordRef = createRef<HTMLInputElement>();
     const confPassRef = createRef<HTMLInputElement>();
-    const [selected, setSelected] = useState('');
 
     const nameSubjectRef = createRef<HTMLInputElement>();
     const teacherIdRef = createRef<HTMLSelectElement>();
@@ -32,7 +29,6 @@ const Admin = () => {
 
     const [teacherTable, setTeacherTable] = useState<UserTable[]>([]);
     const [studentTable, setStudentTable] = useState<UserTable[]>([]);
-
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -49,7 +45,7 @@ const Admin = () => {
             const dataTeachers = await user.getTeachers();
             // console.log("Teachers:", dataTeachers);
             setTeacherTable(dataTeachers.map((teacher: any) => ({
-                ra: teacher.RA,
+                ra: teacher.userCode,
                 name: teacher.name,
                 email: teacher.email
             })));
@@ -57,7 +53,7 @@ const Admin = () => {
             const dataStudents = await user.getStudents();
             // console.log("Students:", dataStudents);
             setStudentTable(dataStudents.map((student: any) => ({
-                ra: student.RA,
+                ra: student.userCode,
                 name: student.name,
                 email: student.email
             })));
@@ -70,12 +66,11 @@ const Admin = () => {
     const signUp = async () => {
         try {
             const name = nameRef.current?.value;
-            const ra = raRef.current?.value;
             const email = emailRef.current?.value;
             const password = passwordRef.current?.value;
             const confPass = confPassRef.current?.value;
             
-            if(!name || !ra || !email || !password || !confPass || !selected) {
+            if(!name || !email || !password || !confPass) {
                 return Swal.fire({
                     title: "Erro",
                     text: "Existe um campo não preenchido",
@@ -89,14 +84,12 @@ const Admin = () => {
                 })
             }
 
-            await auth.signUp(selected, ra, name, email, password, confPass)
+            await auth.signUp("1", name, email, password, confPass)
 
             if (nameRef.current) nameRef.current.value = "";
-            if (raRef.current) raRef.current.value = "";
             if (emailRef.current) emailRef.current.value = "";
             if (passwordRef.current) passwordRef.current.value = "";
             if (confPassRef.current) confPassRef.current.value = "";
-            setSelected("");
 
             return Swal.fire({
                 title: "Sucesso",
@@ -139,37 +132,25 @@ const Admin = () => {
                 title: "Sucesso",
                 text: `A matéria foi cadastrada`,
                 icon: "success"
-            })
+            });
         } catch (error) {
-            console.log(error)
-            Swal.fire({
+            return Swal.fire({
                 title: "Erro",
                 text: `A matéria não foi cadastrada por conta de um erro: ${error}`,
                 icon: "error"
-                })
+            });
         }
     };
 
     return(
         <div className="admin-container">
             <div className="cadastros">
-
                 <div className="cadastro-user">
                     <h2>Cadastro Aluno / Professor</h2>
                     <Input labelId="name" labelName="Nome" type="text" reference={nameRef} />
-                    <Input labelId="ra" labelName="RA" type="text" reference={raRef} />
                     <Input labelId="email" labelName="Email" type="email" reference={emailRef} />
                     <Input labelId="password" labelName="Senha" type="password" reference={passwordRef} />
                     <Input labelId="confirmPassword" labelName="Confirme a senha" type="password" reference={confPassRef} />
-
-                    <div className="radio-group">
-                        <label>
-                            <Input labelId="teacher" labelName="Professor" type="radio" name="choice" value="1" onChange={(e: any) => setSelected(e.target.value)} checked={selected === "1"} />
-                        </label>
-                        <label>
-                            <Input labelId="student" labelName="Aluno" type="radio" name="choice" value="2" onChange={(e: any) => setSelected(e.target.value)} checked={selected === "2"}/>
-                        </label>
-                    </div>
 
                     <Button title="Cadastrar usuário" onClick={signUp} />
                 </div>
