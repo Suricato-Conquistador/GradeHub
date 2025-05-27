@@ -166,12 +166,32 @@ const Admin = () => {
             <div className="tabelas">
                 <section>
                     <h3>Professores</h3>
-                    <Table thList={["RA", "Nome", "Email"]} tdList={teacherTable} />
+                    <Table
+                        thList={["RA", "Nome", "Email"]}
+                        tdList={teacherTable}
+                        renderRow={(row) => (
+                            <>
+                                <td>{row.ra}</td>
+                                <td>{row.name}</td>
+                                <td>{row.email}</td>
+                            </>
+                        )}
+                    />
                 </section>
 
                 <section>
                     <h3>Alunos</h3>
-                    <Table thList={["RA", "Nome", "Email"]} tdList={studentTable} />
+                    <Table
+                        thList={["RA", "Nome", "Email"]}
+                        tdList={studentTable}
+                        renderRow={(row) => (
+                            <>
+                                <td>{row.ra}</td>
+                                <td>{row.name}</td>
+                                <td>{row.email}</td>
+                            </>
+                        )}
+                    />
                 </section>
             </div>
         </div>

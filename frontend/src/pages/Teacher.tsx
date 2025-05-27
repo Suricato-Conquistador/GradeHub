@@ -58,7 +58,7 @@ const Teacher = () => {
                 <button onClick={() => setSelectedSubjectId(1)}>Set Subject 1</button>
             </div>
             <div>
-                <Table thList={[]} tdList={[]} />
+                {/* <Table thList={[]} tdList={[]} /> */}
             </div>
         </>
     );

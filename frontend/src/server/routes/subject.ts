@@ -9,6 +9,11 @@ export default class Subject {
         return response.data.data;
     };
 
+    public async getSubjectById(id: number) {
+        const response = await api.get(`${baseUrl}/${id}`);
+        return response.data.data;
+    };
+
     public async postSubject(nameSubject: string, teacherId: string) {
         const response = await api.post(`${baseUrl}/`, {
             name: nameSubject,

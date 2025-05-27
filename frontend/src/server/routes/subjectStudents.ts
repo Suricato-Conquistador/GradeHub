@@ -10,7 +10,7 @@ export default class SubjectStudents {
 
     public async getSubjectsByStudentId() {
         const response = await api.get(`${baseUrl}/student`);
-        console.log(response.data.data);
+        console.log(response.data.data)
         return response.data.data;
     };
 };

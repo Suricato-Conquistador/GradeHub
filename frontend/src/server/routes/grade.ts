@@ -6,10 +6,11 @@ export default class Grade {
     public async getGrade() {
     }
 
-    public async postGrade(subject: number) {
+    public async postGrade(subjectId: number) {
         const response = await api.post(`${baseUrl}/`, {
-            subject: subject
+            subjectId: subjectId
         })
+        console.log(response.data.data)
         return response.data
     }
 }

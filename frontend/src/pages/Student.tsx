@@ -1,11 +1,11 @@
-import { createRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Table from "../components/Table";
 import Button from "../components/Button";
-import Swal from "sweetalert2";
 import Grade from "../server/routes/grade";
 import Subject from "../server/routes/subject";
 import User from "../server/routes/user";
 import SubjectStudents from "../server/routes/subjectStudents";
+import { GradeTable } from "../interfaces/grade.interface";
 
 
 const user = new User()
@@ -18,52 +18,83 @@ const Student = () => {
     const [subjectsName, setSubjectsName] = useState<string[]>([]);
     const [teachersName, setTeachersName] = useState<string[]>([]);
 
+    const [gradeTable, setGradeTable] = useState<GradeTable[]>([]);
+
+    const [refresh, setRefresh] = useState(false);
+
     useEffect(() => {
         const fetchSubjects = async () => {
-            const data = await subject.getSubjects();
+            try {
+                const allSubjects = await subject.getSubjects();
+                const enrolledSubjects = await subjectStudents.getSubjectsByStudentId();
 
-            const ids = data.map((e: any) => e.id);
-            const names = data.map((e: any) => e.name);
-            const teacherIds = data.map((e: any) => e.teacherId);
+                const enrolledSubjectIds = enrolledSubjects.map((s: any) => s.subject_id);
 
-            console.log(await subjectStudents.getSubjectsByStudentId())
+                const availableSubjects = allSubjects.filter((s: any) => !enrolledSubjectIds.includes(s.id));
 
-            const teachers = await Promise.all(
-                teacherIds.map(async (id: number) => {
-                    const teacherData = await user.getUserById(id);
-                    return teacherData.name;
-                })
-            );
-            setSubjectsId(ids);
-            setSubjectsName(names);
-            setTeachersName(teachers);
+                const ids = availableSubjects.map((e: any) => e.id);
+                const names = availableSubjects.map((e: any) => e.name);
+                const teacherIds = availableSubjects.map((e: any) => e.teacherId);
+
+                const teacherNames = await Promise.all(
+                    teacherIds.map(async (id: number) => {
+                        try {
+                            const teacherData = await user.getUserById(id);
+                            return teacherData.name;
+                        } catch (e) {
+                            console.error(`Erro ao buscar professor com ID ${id}:`, e);
+                            return "Desconhecido";
+                        }
+                    })
+                );
+
+                setSubjectsId(ids);
+                setSubjectsName(names);
+                setTeachersName(teacherNames);
+            } catch (error) {
+                console.error("Erro ao buscar dados:", error);
+            }
         };
 
         fetchSubjects();
-    }, []);
+    }, [refresh]);
 
-    const postGrade = async (id: number) => {
+    useEffect(() => {
+        const fetchGrades = async () => {
+            try {
+                const enrolledSubjects = await subjectStudents.getSubjectsByStudentId();
+
+                const tableData = await Promise.all(
+                    enrolledSubjects.map(async (entry: any) => {
+                        const subjectData = await subject.getSubjectById(entry.subject_id);
+                        const teacherData = await user.getUserById(subjectData.teacherId);
+
+                        return {
+                            subject: subjectData.name,
+                            grade: entry.grade ?? "-",
+                            teacher: teacherData.name,
+                        };
+                    })
+                );
+
+                setGradeTable(tableData);
+            } catch (error) {
+                console.error("Erro ao carregar notas:", error);
+            }
+        };
+
+        fetchGrades();
+    }, [refresh]);
+
+    const postGrade = async (subjectId: number) => {
         try {
-
-            await grade.postGrade(id);
-
+            await grade.postGrade(subjectId);
+            setRefresh(prev => !prev); // alterna entre true/false para reativar os useEffects
         } catch (error) {
-            Swal.fire({
-                title: "Erro",
-                text: `A matéria não foi cadastrada por conta de um erro: ${error}`,
-                icon: "error"
-            })
+            console.error("Erro ao matricular:", error);
         }
     };
 
-    const subjectAndTeacher = async () => {
-        try {
-            await subjectStudents.getSubjectsByStudentId()
-            return subjectStudents;
-        } catch(e) {
-            console.log(e)
-        }
-    }
 
     return(
         <>
@@ -72,14 +103,25 @@ const Student = () => {
                     {subjectsId.map((e, index) => (
                         <div key={e}>
                             <p>{subjectsName[index]}</p>
-                            <p>{teachersName[index]}</p>
+                            <p>Professor: {teachersName[index]}</p>
                             <Button title="Matricular" onClick={() => postGrade(e)} />
                         </div>
                     ))}
                 </div>
-                {/* <div>
-                    <Table thList={["a", "b", "c"]} tdList={[]} />
-                </div> */}
+                <div>
+                    <Table
+                        thList={["Matéria", "Nota", "Professor"]}
+                        tdList={gradeTable}
+                        renderRow={(row) => (
+                            <>
+                                <td>{row.subject}</td>
+                                <td>{row.grade}</td>
+                                <td>{row.teacher}</td>
+                            </>
+                        )}
+                    />
+
+                </div>
             </div>
         </>
     );
