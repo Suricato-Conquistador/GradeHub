@@ -1,6 +1,6 @@
 'use strict';
 const { DataTypes } = require('sequelize');
-const sequelize = require('../../config/database');
+const { sequelize } = require('../../config/database');
 const bcrypt = require('bcrypt');
 const AppError = require('../../utils/appError');
 const grade = require('./grade');
