@@ -1,8 +1,8 @@
 'use strict';
 const { DataTypes } = require('sequelize');
-const { sequelize } = require('../../config/database');
+const { sequelizeSecondary } = require('../config/database');
 
-const deletedId = sequelize.define('deletedIds',
+const deletedId = sequelizeSecondary.define('deletedIds',
   {
     id: {
       allowNull: false,

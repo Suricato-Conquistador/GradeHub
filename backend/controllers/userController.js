@@ -1,5 +1,6 @@
 const { Op } = require('sequelize');
 const user = require('../db/models/user');
+const deletedIds = require('../secondaryDB/deletedIds');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const bcrypt = require('bcrypt');
@@ -106,15 +107,24 @@ const deleteUser = catchAsync(async (req, res, next) => {
 });
 
 const deleteUserBackup = catchAsync(async (req, res, next) => {
-    const result = await user.findAll({ where: { deletedAt: { [Op.ne]: null }}});
+    const result = await deletedIds.findAll();
 
-    result.forEach((user) => {
-        user.name = null;
-        user.email = null;
-        user.userType = null;
-        user.userCode = null;
-        user.password = null;
+    result.forEach(async(idData) => {
+        const userData = await user.findOne({ where: { number: idData.number }});
+
+        userData.name = null;
+        userData.email = null;
+        userData.userType = null;
+        userData.userCode = null;
+        userData.password = null;
+
+
+        await userData.save()
+        
+        console.log(userData);
     });
+
+    console.log(result);
 
     return res.json({
         status: 'success',

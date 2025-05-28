@@ -5,9 +5,11 @@
   "scripts": {
     "recreate-seeders": "npx sequelize-cli db:seed:undo:all && npx sequelize-cli db:seed:all",
     "recreate-migrations": "npx sequelize-cli db:migrate:undo:all && npx sequelize-cli db:migrate",
+    "recreate-secondary-migration": "npx sequelize-cli db:migrate:undo:all --env secondary && npx sequelize-cli db:migrate --env secondary",
+    "clear-secondary": "npx sequelize-cli db:create --env secondary && npm run recreate-secondary-migration",
     "clear-data": "npm run recreate-migrations && npm run recreate-seeders",
     "create-db": "npx sequelize-cli db:create",
-    "start-clear": "npm run clear-data && nodemon server.js",
+    "start-clear": "npm run clear-data && npm run clear-secondary && nodemon server.js",
     "start": "nodemon server.js"
   },
   "author": "",

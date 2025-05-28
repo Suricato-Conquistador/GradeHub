@@ -1,4 +1,3 @@
-const { authentication, restrictTo } = require('../controllers/authController');
 const { signup, login } = require('../controllers/authController');
 
 const router = require('express').Router();
