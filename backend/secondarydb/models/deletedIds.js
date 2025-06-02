@@ -1,6 +1,6 @@
 'use strict';
 const { DataTypes } = require('sequelize');
-const { sequelizeSecondary } = require('../config/database');
+const { sequelizeSecondary } = require('../../config/database');
 
 const deletedId = sequelizeSecondary.define('deletedIds',
   {
@@ -16,7 +16,7 @@ const deletedId = sequelizeSecondary.define('deletedIds',
     },
   },
   {
-    paranoid: true, // Soft delete
+    timestamps: false, // Soft delete
     freezeTableName: true, // Desabilita a pluralização
     modelName: 'deletedIds'
   }

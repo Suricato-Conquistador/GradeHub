@@ -1,6 +1,6 @@
 const { Op } = require('sequelize');
 const user = require('../db/models/user');
-const deletedIds = require('../secondaryDB/deletedIds');
+const deletedIds = require('../secondaryDB/models/deletedIds');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const bcrypt = require('bcrypt');
@@ -100,6 +100,8 @@ const deleteUser = catchAsync(async (req, res, next) => {
 
     await result.destroy();
 
+    await deletedIds.create({ number: id });
+
     return res.json({
         status: 'success',
         message: 'Record deleted successfully',
@@ -110,7 +112,10 @@ const deleteUserBackup = catchAsync(async (req, res, next) => {
     const result = await deletedIds.findAll();
 
     result.forEach(async(idData) => {
-        const userData = await user.findOne({ where: { number: idData.number }});
+        let userData = await user.findOne({ 
+            where: { id: idData.number },
+            paranoid: false,
+        });
 
         userData.name = null;
         userData.email = null;
@@ -118,18 +123,15 @@ const deleteUserBackup = catchAsync(async (req, res, next) => {
         userData.userCode = null;
         userData.password = null;
 
-
-        await userData.save()
+        await userData.save();
         
-        console.log(userData);
+        await deletedIds.destroy({ where: { id: idData.id }});
     });
 
-    console.log(result);
-
-    return res.json({
+    return {
         status: 'success',
         message: 'Database updated successfully',
-    });
+    };
 });
 
 module.exports = { getAllUsers, getUsersByRole, getUserById, updateUser, deleteUser, deleteUserBackup };
