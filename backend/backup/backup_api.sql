@@ -2,13 +2,12 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 17.3
--- Dumped by pg_dump version 17.3
+-- Dumped from database version 16.4
+-- Dumped by pg_dump version 16.4
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
-SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -242,7 +241,7 @@ COPY public."SequelizeMeta" (name) FROM stdin;
 --
 
 COPY public.grades (id, grade, "subjectId", "studentId", "createdAt", "updatedAt", "deletedAt") FROM stdin;
-1	8	2	5	2025-06-02 17:58:30.4-03	2025-06-02 17:58:30.4-03	\N
+1	8	2	5	2025-06-03 18:14:00.576-03	2025-06-03 18:14:00.576-03	\N
 \.
 
 
@@ -251,9 +250,9 @@ COPY public.grades (id, grade, "subjectId", "studentId", "createdAt", "updatedAt
 --
 
 COPY public.subjects (id, name, "teacherId", "createdAt", "updatedAt", "deletedAt") FROM stdin;
-1	História	2	2025-06-02 17:58:30.362-03	2025-06-02 17:58:30.362-03	\N
-2	Filosofia	3	2025-06-02 17:58:30.362-03	2025-06-02 17:58:30.362-03	\N
-3	Sociologia	3	2025-06-02 17:58:30.362-03	2025-06-02 17:58:30.362-03	\N
+1	História	2	2025-06-03 18:14:00.533-03	2025-06-03 18:14:00.533-03	\N
+2	Filosofia	3	2025-06-03 18:14:00.533-03	2025-06-03 18:14:00.533-03	\N
+3	Sociologia	3	2025-06-03 18:14:00.533-03	2025-06-03 18:14:00.533-03	\N
 \.
 
 
@@ -262,11 +261,11 @@ COPY public.subjects (id, name, "teacherId", "createdAt", "updatedAt", "deletedA
 --
 
 COPY public.users (id, "userType", "userCode", name, email, password, "createdAt", "updatedAt", "deletedAt") FROM stdin;
-1	0	1234567890123	Admin	admin@gmail.com	$2b$10$B77c.Jv2J/lbur19vmQ.B.YY91jVkRJVtIeEPRgqnotwGB3LIVTb2	2025-06-02 17:58:29.668-03	2025-06-02 17:58:29.668-03	\N
-2	1	1111111111111	Rubens da Costa	rubens@gmail.com	$2b$10$fbjzrAI/6ZQy3DUX99tYgu3L9zfEdtSoUkAXMdQowl7hxUMa.pQsy	2025-06-02 17:58:29.668-03	2025-06-02 17:58:29.668-03	\N
-3	1	2222222222222	Vitor Henrique	vitor@gmail.com	$2b$10$JwCiX1EkoJ84mudM8JkRT.Wcaco2tHJ3DDoZxS1T224iu34VGl/W2	2025-06-02 17:58:29.668-03	2025-06-02 17:58:29.668-03	\N
-4	2	3333333333333	João Eduardo	joao@gmail.com	$2b$10$0cLNOJ2PONOH.RcQzxQV..QmbKzKHLzahMt7xGRf6LeVwLyuRXgMe	2025-06-02 17:58:29.668-03	2025-06-02 17:58:29.668-03	\N
-5	2	4444444444444	Sandro Roberto	sandro@gmail.com	$2b$10$UeUDRIdo7.vPbeFU1aYQSeOdIU8z5QdGPu2H9G6W9LoCT.7yzdvzy	2025-06-02 17:58:29.668-03	2025-06-02 17:58:29.668-03	\N
+1	0	1234567890123	Admin	admin@gmail.com	$2b$10$Jigwj9i4LnhpByNv5Qlj9uqS6MBiP1SgSTDuzuYTvVtG98E3lYZca	2025-06-03 18:13:59.876-03	2025-06-03 18:13:59.876-03	\N
+2	1	1111111111111	Rubens da Costa	rubens@gmail.com	$2b$10$TQlLdO8qy0Qi.bGpPoC6o.PAm5DOTwIdwRKtTkXGBsQ7Z120jBxg2	2025-06-03 18:13:59.876-03	2025-06-03 18:13:59.876-03	\N
+3	1	2222222222222	Vitor Henrique	vitor@gmail.com	$2b$10$zSYBQ.ZeUNMXG8.KUpZdVu0aDTg.SJk3jpS8j06Xi9LLWLVnq12tS	2025-06-03 18:13:59.876-03	2025-06-03 18:13:59.876-03	\N
+4	2	3333333333333	João Eduardo	joao@gmail.com	$2b$10$x58Y3DuWBa5TUaECeookHus.BbtYzQLmvlBN7mN.k5ZLgM1IV5qVa	2025-06-03 18:13:59.876-03	2025-06-03 18:13:59.876-03	\N
+5	2	4444444444444	Sandro Roberto	sandro@gmail.com	$2b$10$ZDg2XGlvphiKkgRz8N4Zp.hVEfAWosyVDDJthihxGh.N9eSRJ.qhm	2025-06-03 18:13:59.876-03	2025-06-03 18:13:59.876-03	\N
 \.
 
 

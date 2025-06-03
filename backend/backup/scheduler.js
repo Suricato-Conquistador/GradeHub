@@ -1,9 +1,9 @@
 const cron = require('node-cron');
-const { createDatabaseBackup } = require('./backup');
+const { createDatabaseBackup, createSecondaryDatabaseBackup } = require('./backup');
 const { deleteUserBackup } = require('../controllers/userController');
 
         //   min hr d m sem
-cron.schedule('* * * * *', async () => {
+cron.schedule('* * 1 * *', async () => {
     try {
         await deleteUserBackup();
         
@@ -15,7 +15,7 @@ cron.schedule('* * * * *', async () => {
 
 cron.schedule('0 * * * *', async () => {
     try {
-        console.log("backup banco secundário");
+        await createSecondaryDatabaseBackup();
     } catch(error) {
         console.error("Erro: ", error);
     }
