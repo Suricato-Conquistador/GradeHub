@@ -51,6 +51,23 @@ const getUserById = catchAsync(async (req, res, next) => {
     });
 });
 
+const getLoggedUser = catchAsync(async (req, res, next) => {
+    const { id } = req.user;
+    const result = await user.findByPk(id, { 
+        where: { deletedAt: null }, 
+        attributes: { exclude: ['userType', 'password', 'deletedAt'] },
+    });
+
+    if(!result) {
+        return next(new AppError("Invalid user id", 400));
+    }
+
+    return res.json({
+        status: 'success',
+        data: result,
+    });
+});
+
 const updateUser = catchAsync(async (req, res, next) => {
     const { id } = req.params;
     const { body } = req;
@@ -122,4 +139,4 @@ const deleteUserBackup = catchAsync(async (req, res, next) => {
     });
 });
 
-module.exports = { getAllUsers, getUsersByRole, getUserById, updateUser, deleteUser, deleteUserBackup };
+module.exports = { getAllUsers, getLoggedUser, getUsersByRole, getUserById, updateUser, deleteUser, deleteUserBackup };
