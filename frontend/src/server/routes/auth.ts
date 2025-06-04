@@ -8,13 +8,13 @@ export default class Auth {
             email: email,
             password: password
         });
+        console.log(response.data.status)
         return response.data;
     };
 
-    public async signUp(userType: string, ra: string, name: string, email: string, password: string, confirmPassword: string) {
+    public async signUp(userType: string, name: string, email: string, password: string, confirmPassword: string) {
         const response = await api.post(`${baseUrl}/signup`, {
             userType: userType,
-            RA: ra,
             name: name,
             email: email,
             password: password,

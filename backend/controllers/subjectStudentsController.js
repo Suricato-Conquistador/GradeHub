@@ -17,7 +17,7 @@ const getStudentsBySubjectId = catchAsync(async (req, res, next) => {
         where: { subject_id: subjectId }
     });
 
-    return res.status.json({
+    return res.status(200).json({
         status: 'success',
         data: result
     });
@@ -30,7 +30,7 @@ const getSubjectsByStudentId = catchAsync(async (req, res, next) => {
         where: { student_id: id }
     });
 
-    return res.status.json({
+    return res.status(200).json({
         status: 'success',
         data: result
     });

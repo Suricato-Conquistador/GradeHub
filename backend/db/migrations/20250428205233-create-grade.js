@@ -11,11 +11,11 @@ module.exports = {
       },
       grade: {
         type: Sequelize.DECIMAL,
-        allowNull: false,
+        allowNull: true,
       },
       subjectId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: 'subjects',
           key: 'id',
@@ -23,7 +23,7 @@ module.exports = {
       },
       studentId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: 'users',
           key: 'id',

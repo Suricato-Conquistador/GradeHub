@@ -1,8 +1,10 @@
-import { UserTable } from "./user.interface";
+import { JSX } from "react";
 
 
-export interface TableProps {
+export interface TableProps<T = any> {
     thList: string[];
-    tdList: UserTable[];
+    tdList: T[];
+    renderRow: (row: T) => JSX.Element;
     classname?: string;
-};
+}
+

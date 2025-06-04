@@ -3,9 +3,14 @@ import { api } from "../api";
 const baseUrl = "/subject";
 
 export default class Subject {
-    public async getSubject() {
+    public async getSubjects() {
         const response = await api.get(`${baseUrl}/`);
-        console.log(response.data)
+        console.log(response.data.data)
+        return response.data.data;
+    };
+
+    public async getSubjectById(id: number) {
+        const response = await api.get(`${baseUrl}/${id}`);
         return response.data.data;
     };
 

@@ -12,8 +12,12 @@ const SubjectStudentsView = sequelize.define('SubjectStudentsView', {
     type: DataTypes.STRING,
     allowNull: true
   },
-  student_ra: {
+  student_code: {
     type: DataTypes.STRING,
+    allowNull: true
+  },
+  grade_id: {
+    type: DataTypes.INTEGER,
     allowNull: true
   },
   grade: {
