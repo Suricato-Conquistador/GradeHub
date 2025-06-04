@@ -10,24 +10,24 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       userType: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.ENUM('0', '1', '2')
       },
       userCode: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING
       },
       name: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING
       },
       email: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING,
         unique: true
       },
       password: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING
       },
       createdAt: {

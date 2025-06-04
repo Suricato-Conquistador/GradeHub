@@ -1,6 +1,6 @@
 'use strict';
 const { DataTypes } = require('sequelize');
-const sequelize = require('../../config/database');
+const { sequelize } = require('../../config/database');
 const grade = require('./grade');
 
 const subject = sequelize.define('subjects',

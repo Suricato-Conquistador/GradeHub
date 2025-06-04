@@ -4,10 +4,14 @@
   "main": "index.js",
   "scripts": {
     "recreate-seeders": "npx sequelize-cli db:seed:undo:all && npx sequelize-cli db:seed:all",
-    "recreate-migrations": "npx sequelize-cli db:migrate:undo:all && npx sequelize-cli db:migrate",
+    "recreate-migrations": "cross-env MIGRATION_ENV=primary sequelize-cli db:migrate:undo:all && cross-env MIGRATION_ENV=primary sequelize-cli db:migrate",
+    "recreate-secondary-migration": "cross-env MIGRATION_ENV=secondary sequelize-cli db:migrate:undo:all --env secondary && cross-env MIGRATION_ENV=secondary sequelize-cli db:migrate --env secondary",
+    "create-secondary-migration": "cross-env MIGRATION_ENV=secondary npx sequelize-cli migration:create --name create-deleted-ids",
+    "clear-secondary": "npm run recreate-secondary-migration",
     "clear-data": "npm run recreate-migrations && npm run recreate-seeders",
     "create-db": "npx sequelize-cli db:create",
-    "start-clear": "npm run clear-data && nodemon server.js",
+    "create-secondary-db": "npx sequelize-cli db:create --env secondary",
+    "start-clear": "npm run clear-data && npm run clear-secondary && nodemon server.js",
     "start": "nodemon server.js"
   },
   "author": "",
@@ -26,6 +30,7 @@
     "sequelize": "^6.37.7"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "nodemon": "^3.1.9",
     "sequelize-cli": "^6.6.2"
   }
