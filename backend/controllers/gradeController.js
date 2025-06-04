@@ -77,14 +77,13 @@ const getGradeByStudent = catchAsync(async (req, res, next) => {
         status: 'success',
         data: result,
     });
-})
+});
 
 const updateGrade = catchAsync(async (req, res, next) => {
     const { id } = req.params;
-    const teacherId = req.user.id;
     const { body } = req;
 
-    const result = await grade.findOne({ where: { id: id, teacherId: teacherId, deletedAt: null }});
+    const result = await grade.findOne({ where: { id: id, deletedAt: null }});
 
     if(!result) {
         return next(new AppError("Invalid grade id", 400));
@@ -97,8 +96,6 @@ const updateGrade = catchAsync(async (req, res, next) => {
     if(body.subject) {
         result.subject = body.subject;
     }
-
-    result.teacherId = teacherId;
 
     if(body.studentId) {
         const result2 = await user.findByPk(body.studentId, { where: { deletedAt: null }});

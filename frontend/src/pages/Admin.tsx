@@ -9,6 +9,7 @@ import Auth from "../server/routes/auth";
 import Input from "../components/Input";
 import Table from "../components/Table";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router";
 
 
 const subject = new Subject();
@@ -62,6 +63,11 @@ const Admin = () => {
         fetchUsersTable();
     }, []);
 
+    const navigate = useNavigate();
+
+    const toUserPage = () => {
+        navigate("/user");
+    };
 
     const signUp = async () => {
         try {
@@ -84,7 +90,7 @@ const Admin = () => {
                 })
             }
 
-            await auth.signUp("1", name, email, password, confPass)
+            await auth.signUp("1", name, email, password, confPass);
 
             if (nameRef.current) nameRef.current.value = "";
             if (emailRef.current) emailRef.current.value = "";
@@ -112,7 +118,7 @@ const Admin = () => {
             const nameSubject = nameSubjectRef.current?.value;
             const teacherId = teacherIdRef.current?.value;
 
-            console.log(userIds); // Deve imprimir algo como [1, 2, 3]
+            console.log(userIds);
 
             
             console.log(nameSubject)
@@ -167,6 +173,7 @@ const Admin = () => {
             </div>
 
             <div className="tabelas">
+                <Button title="Tela de usuário" onClick={toUserPage} />
                 <section>
                     <h3>Professores</h3>
                     <Table

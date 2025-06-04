@@ -89,7 +89,7 @@ const Student = () => {
     const postGrade = async (subjectId: number) => {
         try {
             await grade.postGrade(subjectId);
-            setRefresh(prev => !prev); // alterna entre true/false para reativar os useEffects
+            setRefresh(prev => !prev);
         } catch (error) {
             console.error("Erro ao matricular:", error);
         }

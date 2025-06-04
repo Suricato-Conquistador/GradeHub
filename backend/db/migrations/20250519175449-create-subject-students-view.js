@@ -9,6 +9,7 @@ module.exports = {
           u.id AS student_id,
           u.name AS student_name,
           u."userCode" AS student_code,
+          g.id AS grade_id,
           g.grade,
           s.id AS subject_id,
           s.name AS subject_name
