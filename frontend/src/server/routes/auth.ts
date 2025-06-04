@@ -8,6 +8,7 @@ export default class Auth {
             email: email,
             password: password
         });
+        console.log(response.data.status)
         return response.data;
     };
 

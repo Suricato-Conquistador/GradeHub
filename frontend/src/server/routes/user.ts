@@ -8,6 +8,12 @@ export default class User {
         return response.data.data;
     };
 
+    public async getLoggedUser() {
+        const response = await api.get(`${baseUrl}/getLoggedUser`);
+        console.log(response.data);
+        return response.data.data;
+    }
+
     public async getTeachers() {
         const response = await api.get(`${baseUrl}/userType/1`);
         // console.log(response.data.data.rows);
@@ -23,6 +29,16 @@ export default class User {
     public async getStudentsBySubjectId(id: number) {
         const response = await api.get(`subjectStudents/${id}`);
         // console.log(response.data);
+        return response.data;
+    };
+
+    public async patchUser(id: number, name?: string, email?: string, password?: string) {
+        console.log(name)
+        const response = await api.patch(`${baseUrl}/${id}`, {
+            name: name,
+            email: email,
+            password: password
+        });
         return response.data;
     };
   

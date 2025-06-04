@@ -5,7 +5,7 @@ import Grade from "../server/routes/grade";
 import Subject from "../server/routes/subject";
 import User from "../server/routes/user";
 import SubjectStudents from "../server/routes/subjectStudents";
-import { GradeTable } from "../interfaces/grade.interface";
+import { GradeTableStudent } from "../interfaces/grade.interface";
 
 
 const user = new User()
@@ -18,7 +18,7 @@ const Student = () => {
     const [subjectsName, setSubjectsName] = useState<string[]>([]);
     const [teachersName, setTeachersName] = useState<string[]>([]);
 
-    const [gradeTable, setGradeTable] = useState<GradeTable[]>([]);
+    const [gradeTable, setGradeTable] = useState<GradeTableStudent[]>([]);
 
     const [refresh, setRefresh] = useState(false);
 
@@ -95,7 +95,6 @@ const Student = () => {
         }
     };
 
-
     return(
         <>
             <div>
@@ -120,7 +119,6 @@ const Student = () => {
                             </>
                         )}
                     />
-
                 </div>
             </div>
         </>
