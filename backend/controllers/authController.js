@@ -11,16 +11,27 @@ const generateToken = (payload) => {
     });
 };
 
-const signup = catchAsync(async (req, res, next) => {
-    const body = req.body;
+const generateUserCode = () => {
+    let ra = '';
 
-    if(!['0', '1', '2'].includes(body.userType)) {
-        throw new AppError("Invalid user type", 400);
+    for (let i = 0; i < 13; i++) {
+        ra += Math.floor(Math.random() * 10);
     }
+    return ra;
+};
+
+const signup = catchAsync(async (req, res, next) => {
+    const { body } = req;
+
+    if(!['1', '2'].includes(body.userType)) {
+        return next(new AppError("Invalid userType", 400));
+    }
+
+    const userCode = generateUserCode();
 
     const newUser = await user.create({
         userType: body.userType,
-        RA:body.RA,
+        userCode: userCode,
         name: body.name,
         email: body.email,
         password: body.password,

@@ -1,6 +1,6 @@
 'use strict';
 const { DataTypes } = require('sequelize');
-const sequelize = require('../../config/database');
+const { sequelize } = require('../../config/database');
 const bcrypt = require('bcrypt');
 const AppError = require('../../utils/appError');
 const grade = require('./grade');
@@ -15,50 +15,38 @@ const user = sequelize.define('users',
       type: DataTypes.INTEGER,
     },
     userType: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.ENUM('0', '1', '2'),
       validate: {
-        notNull: {
-          msg: "userType cannot be null",
-        },
         notEmpty: {
           msg: "userType cannot be empty",
         },
       }
     },
-    RA: {
-      allowNull: false,
+    userCode: {
+      allowNull: true,
       type: DataTypes.STRING,
       unique: true,
       validate: {
-        notNull: {
-          msg: "RA cannot be null",
-        },
         notEmpty: {
-          msg: "RA cannot be empty",
+          msg: "UserCode cannot be empty",
         },
       },
     },
     name: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.STRING,
       validate: {
-        notNull: {
-          msg: "Name cannot be null",
-        },
         notEmpty: {
           msg: "Name cannot be empty",
         },
       },
     },
     email: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.STRING,
       unique: true,
       validate: {
-        notNull: {
-          msg: "Email cannot be null",
-        },
         notEmpty: {
           msg: "Email cannot be empty",
         },
@@ -68,12 +56,9 @@ const user = sequelize.define('users',
       },
     },
     password: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.STRING,
       validate: {
-        notNull: {
-          msg: "Password cannot be null",
-        },
         notEmpty: {
           msg: "Password cannot be empty",
         },
@@ -107,7 +92,7 @@ const user = sequelize.define('users',
   }, 
   {
     paranoid: true, // Soft delete
-    freezeTableName: true, // dEsabilita a pluralização
+    freezeTableName: true, // Desabilita a pluralização
     modelName: 'users'
   }
 );

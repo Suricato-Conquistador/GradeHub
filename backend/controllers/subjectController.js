@@ -34,11 +34,6 @@ const getAllSubjects = catchAsync(async (req, res, next) => {
             where: { teacherId: userId, deletedAt: null }, 
             attributes: { exclude: ['deletedAt']} 
         });
-    } else if(userType === '2') {
-        result = await subject.findAll({ 
-            where: { studentId: userId, deletedAt: null },
-            attributes: { exclude: ['deletedAt']}
-        });
     } else {
         result = await subject.findAll({ 
             where: { deletedAt: null },
@@ -51,8 +46,6 @@ const getAllSubjects = catchAsync(async (req, res, next) => {
         data: result
     });
 });
-
-
 
 const getSubjectById = catchAsync(async (req, res, next) => {
     const subjectId = req.params.id;

@@ -8,7 +8,7 @@ module.exports = {
         SELECT 
           u.id AS student_id,
           u.name AS student_name,
-          u."RA" AS student_ra,
+          u."userCode" AS student_code,
           g.grade,
           s.id AS subject_id,
           s.name AS subject_name

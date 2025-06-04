@@ -1,5 +1,6 @@
 const { Op } = require('sequelize');
 const user = require('../db/models/user');
+const deletedIds = require('../secondaryDB/models/deletedIds');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const bcrypt = require('bcrypt');
@@ -34,10 +35,9 @@ const getUsersByRole = catchAsync(async (req, res, next) => {
     });
 });
 
-//Pegar pelo dono da requisição, sem uso de params
 const getUserById = catchAsync(async (req, res, next) => {
-    const userId = req.params.id;
-    const result = await user.findByPk(userId, { 
+    const { id } = req.params;
+    const result = await user.findByPk(id, { 
         where: { deletedAt: null }, 
         attributes: { exclude: ['userType', 'password', 'deletedAt'] },
     });
@@ -53,8 +53,8 @@ const getUserById = catchAsync(async (req, res, next) => {
 });
 
 const updateUser = catchAsync(async (req, res, next) => {
-    const id = req.params.id;
-    const body = req.body;
+    const { id } = req.params;
+    const { body } = req;
 
     const result = await user.findOne({ where: { id: id, deletedAt: null }});
 
@@ -90,7 +90,7 @@ const updateUser = catchAsync(async (req, res, next) => {
 });
 
 const deleteUser = catchAsync(async (req, res, next) => {
-    const id = req.params.id;
+    const { id } = req.params;
 
     const result = await user.findOne({ where: { id: id }});
     
@@ -100,6 +100,8 @@ const deleteUser = catchAsync(async (req, res, next) => {
 
     await result.destroy();
 
+    await deletedIds.create({ number: id });
+
     return res.json({
         status: 'success',
         message: 'Record deleted successfully',
@@ -107,7 +109,29 @@ const deleteUser = catchAsync(async (req, res, next) => {
 });
 
 const deleteUserBackup = catchAsync(async (req, res, next) => {
-    await user.destroy({ where: { deletedAt: { [Op.ne]: null }}});
+    const result = await deletedIds.findAll();
+
+    result.forEach(async(idData) => {
+        let userData = await user.findOne({ 
+            where: { id: idData.number },
+            paranoid: false,
+        });
+
+        userData.name = null;
+        userData.email = null;
+        userData.userType = null;
+        userData.userCode = null;
+        userData.password = null;
+
+        await userData.save();
+        
+        await deletedIds.destroy({ where: { id: idData.id }});
+    });
+
+    return {
+        status: 'success',
+        message: 'Database updated successfully',
+    };
 });
 
 module.exports = { getAllUsers, getUsersByRole, getUserById, updateUser, deleteUser, deleteUserBackup };
