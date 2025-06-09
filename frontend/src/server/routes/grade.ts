@@ -7,7 +7,7 @@ export default class Grade {
         const response = await api.post(`${baseUrl}/`, {
             subjectId: subjectId
         });
-        console.log(response.data.data);
+        // console.log(response.data.data);
         return response.data;
     };
 

@@ -10,7 +10,7 @@ export default class User {
 
     public async getLoggedUser() {
         const response = await api.get(`${baseUrl}/getLoggedUser`);
-        console.log(response.data);
+        // console.log(response.data);
         return response.data.data;
     }
 
@@ -33,7 +33,6 @@ export default class User {
     };
 
     public async patchUser(id: number, name?: string, email?: string, password?: string) {
-        console.log(name)
         const response = await api.patch(`${baseUrl}/${id}`, {
             name: name,
             email: email,

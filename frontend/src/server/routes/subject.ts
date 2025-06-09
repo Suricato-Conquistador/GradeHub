@@ -5,7 +5,7 @@ const baseUrl = "/subject";
 export default class Subject {
     public async getSubjects() {
         const response = await api.get(`${baseUrl}/`);
-        console.log(response.data.data)
+        // console.log(response.data.data);
         return response.data.data;
     };
 

@@ -3,9 +3,12 @@ import Input from "../components/Input";
 import User from "../server/routes/user";
 import Button from "../components/Button";
 import Auth from "../server/routes/auth";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router";
 
-const user = new User();
-const auth = new Auth();
+
+const _user = new User();
+const _auth = new Auth();
 
 const UserPage = () => {
     const nameRef = createRef<HTMLInputElement>();
@@ -21,15 +24,26 @@ const UserPage = () => {
         email: ""
     });
 
+    const [userType, setUserType] = useState<string>();
+
+    const navigate = useNavigate();
+
+    const backPage = () => {
+        if(userType === "0") navigate("/admin");
+        if(userType === "1") navigate("/teacher");
+        if(userType === "2") navigate("/student");
+    };
+
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const userData = await user.getLoggedUser();
+                const userData = await _user.getLoggedUser();
                 setFormData({
                     name: userData.name || "",
                     email: userData.email || ""
                 });
                 setUserId(userData.id);
+                setUserType(userData.userType);
             } catch (error) {
                 console.error("Erro ao buscar dados do usuário:", error);
             }
@@ -51,19 +65,41 @@ const UserPage = () => {
         const email = emailRef.current?.value;
 
         try {
-            const response = await user.patchUser(userId, name, email, undefined);
-            console.log(response);
+            await _user.patchUser(userId, name, email, undefined);
+            Swal.fire({
+                title: "Sucesso",
+                text: "Os dados foram alterados com sucesso",
+                icon: "success"
+            });
+
         } catch (e) {
-            console.log(e)
+            Swal.fire({
+                title: "Erro",
+                text: "Os dados não foram alterados por conta de um erro",
+                icon: "error"
+            });
         }
     };
 
     const changePassword = async (pass1: string) => {
         try {
-            const response = await user.patchUser(userId, undefined, undefined, pass1);
-            console.log(response)
+            await _user.patchUser(userId, undefined, undefined, pass1);
+
+            Swal.fire({
+                title: "Sucesso",
+                text: "Sua senha foi alterada com sucesso",
+                icon: "success"
+            });
+
+            if (passwordRef.current) passwordRef.current.value = "";
+            if (pass1Ref.current) pass1Ref.current.value = "";
+            if (pass2Ref.current) pass2Ref.current.value = "";
         } catch(e) {
-            console.log(e);
+            Swal.fire({
+                title: "Erro",
+                text: "A senha não foi mudada por conta de um erro",
+                icon: "error"
+            });
         }
     };
 
@@ -72,21 +108,31 @@ const UserPage = () => {
         const pass1 = pass1Ref.current?.value;
         const pass2 = pass2Ref.current?.value;
         if(!password || !pass1 || !pass2) {
-            console.log("CAMPO VAZIO")
-            return
+            return Swal.fire({
+                title: "Erro",
+                text: "Existe um campo não preenchido",
+                icon: "warning"
+            });
         }
 
         if(pass1 !== pass2) {
-            console.log("Senhas diferentes");
-            return
+            return Swal.fire({
+                title: "Erro",
+                text: "As senhas não são iguais",
+                icon: "warning"
+            });
         }
 
-        const response = await auth.login(formData.email, password);
+        const response = await _auth.login(formData.email, password);
 
         if(response.status === "success") {
             changePassword(pass1);
         } else {
-            console.log("Senha errada");
+            Swal.fire({
+                title: "Erro",
+                text: "Senha incorreta",
+                icon: "error"
+            });
         }
     };
 
@@ -108,6 +154,7 @@ const UserPage = () => {
                 <Input labelId={"pass2"} labelName={"Confirme sua nova senha"} type={"password"} reference={pass2Ref} />
                 <Button title={"Mudar senha"} onClick={verifyPassword} />
             </div>
+            <Button title={"Voltar"} onClick={backPage} />
         </>
     );
 };

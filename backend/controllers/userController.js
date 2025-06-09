@@ -56,7 +56,7 @@ const getLoggedUser = catchAsync(async (req, res, next) => {
     const { id } = req.user;
     const result = await user.findByPk(id, { 
         where: { deletedAt: null }, 
-        attributes: { exclude: ['userType', 'password', 'deletedAt'] },
+        attributes: { exclude: ['password', 'deletedAt'] },
     });
 
     if(!result) {

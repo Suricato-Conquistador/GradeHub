@@ -1,5 +1,5 @@
 const { authentication, restrictTo } = require('../controllers/authController');
-const { getAllUsers, getUserById, getLoggedUser, updateUser, deleteUser, getUsersByRole } = require('../controllers/userController');
+const { getAllUsers, getUserById, getLoggedUser, updateUser, deleteUser, getUsersByRole, deleteUserBackup } = require('../controllers/userController');
 
 
 const router = require('express').Router();

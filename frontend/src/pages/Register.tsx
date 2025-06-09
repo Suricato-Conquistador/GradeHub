@@ -6,7 +6,7 @@ import Auth from "../server/routes/auth";
 import Swal from "sweetalert2";
 
 
-const auth = new Auth();
+const _auth = new Auth();
 
 const Register = () => {
     const nameRef = createRef<HTMLInputElement>();
@@ -41,7 +41,7 @@ const Register = () => {
                 });
             }
 
-            await auth.signUp("2", name, email, password, confPass);
+            await _auth.signUp("2", name, email, password, confPass);
 
             if (nameRef.current) nameRef.current.value = "";
             if (emailRef.current) emailRef.current.value = "";
@@ -60,7 +60,7 @@ const Register = () => {
             console.log(error)
             Swal.fire({
                 title: "Erro",
-                text: `O usuário não foi cadastrado por conta de um erro: ${error}`,
+                text: "O usuário não foi cadastrado por conta de um erro",
                 icon: "error"
             });
         }

@@ -7,12 +7,12 @@ import { GradeTableTeacher } from "../interfaces/grade.interface";
 import SubjectStudents from "../server/routes/subjectStudents";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import Swal from "sweetalert2";
 
 
 const _grade = new Grade();
-const subject = new Subject();
-const subjectStudent = new SubjectStudents()
-
+const _subject = new Subject();
+const _subjectStudent = new SubjectStudents()
 
 const Teacher = () => {
     const gradeRef = createRef<HTMLInputElement>();
@@ -29,7 +29,7 @@ const Teacher = () => {
 
     useEffect(() => {
         const fetchSubjects = async () => {
-            const data = await subject.getSubjects();
+            const data = await _subject.getSubjects();
             const safeData = Array.isArray(data) ? data : [];
             setSubjectIds(safeData.map((subject: any) => subject.id));
             setSubjectNames(safeData.map((subject: any) => subject.name));
@@ -43,7 +43,7 @@ const Teacher = () => {
 
         const fetchGradesForSubject = async () => {
             try {
-                const studentsWithGrades = await subjectStudent.getStudentsBySubjectId(selectedSubjectId);
+                const studentsWithGrades = await _subjectStudent.getStudentsBySubjectId(selectedSubjectId);
 
                 const tableRows = studentsWithGrades.map((entry: any) => ({
                     ra: entry.student_code,
@@ -59,7 +59,7 @@ const Teacher = () => {
                 setGradeIds(idGrade);
                 setStudentsName(nameStudents);
             } catch (error) {
-            console.error("Erro ao carregar alunos e notas:", error);
+                console.error("Erro ao carregar alunos e notas:", error);
             }
         };
 
@@ -70,8 +70,11 @@ const Teacher = () => {
         const grade = gradeRef.current?.value;
 
         if(!grade || !selectedStudentId) {
-            console.log("Existem campos faltantes");
-            return;
+            return Swal.fire({
+                title: "Erro",
+                text: "Existe um campo não preenchido",
+                icon: "warning"
+            });
         }
 
         try {
@@ -79,9 +82,20 @@ const Teacher = () => {
             setRefresh(prev => !prev);
             if (gradeRef.current) gradeRef.current.value = "";
             setSelectedStudentId(null);
+
+            Swal.fire({
+                title: "Sucesso",
+                text: "Nota cadastrada com sucesso",
+                timer: 2000,
+                icon: "success"
+            });            
             
         } catch(e) {
-            console.error(e);
+            Swal.fire({
+                title: "Erro",
+                text: "A nota não foi cadastrada por conta de um erro",
+                icon: "error"
+            });
         }
     };
 
