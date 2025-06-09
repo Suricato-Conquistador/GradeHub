@@ -1,20 +1,20 @@
 import { TableProps } from "../interfaces/table.interface";
 
 
-const Table = <T,>({ thList, tdList, renderRow, classname }: TableProps<T>) => {
+const Table = <T,>(props: TableProps<T>) => {
     return (
-        <table className={classname}>
+        <table className={props.classname}>
             <thead>
                 <tr>
-                    {thList.map((value, index) => (
+                    {props.thList.map((value, index) => (
                         <th key={index}>{value}</th>
                     ))}
                 </tr>
             </thead>
             <tbody>
-                {tdList.map((row, index) => (
+                {props.tdList.map((row, index) => (
                     <tr key={index}>
-                        {renderRow(row)}
+                        {props.renderRow(row)}
                     </tr>
                 ))}
             </tbody>

@@ -1,9 +1,12 @@
+import { ChangeEventHandler, Ref } from "react";
+
+
 export interface SelectProps {
-    value?: string;
     options: number[];
     optionsName: string[];
     title: string;
-    onChange?: any;
-    reference?: any;
+    value?: string;
     classname?: string;
+    reference?: Ref<HTMLSelectElement>;
+    onChange?: ChangeEventHandler<HTMLSelectElement>;
 }

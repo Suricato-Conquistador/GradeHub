@@ -12,9 +12,9 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 
 
-const subject = new Subject();
-const auth = new Auth();
-const user = new User();
+const _subject = new Subject();
+const _auth = new Auth();
+const _user = new User();
 
 const Admin = () => {
     const nameRef = createRef<HTMLInputElement>();
@@ -33,7 +33,7 @@ const Admin = () => {
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const data = await user.getTeachers();
+            const data = await _user.getTeachers();
             setUserIds(data.map((user: any) => user.id));
             setUserNames(data.map((user: any) => user.name));
         };
@@ -43,7 +43,7 @@ const Admin = () => {
 
     useEffect(() => {
         const fetchUsersTable = async () => {
-            const dataTeachers = await user.getTeachers();
+            const dataTeachers = await _user.getTeachers();
             // console.log("Teachers:", dataTeachers);
             setTeacherTable(dataTeachers.map((teacher: any) => ({
                 ra: teacher.userCode,
@@ -51,7 +51,7 @@ const Admin = () => {
                 email: teacher.email
             })));
             
-            const dataStudents = await user.getStudents();
+            const dataStudents = await _user.getStudents();
             // console.log("Students:", dataStudents);
             setStudentTable(dataStudents.map((student: any) => ({
                 ra: student.userCode,
@@ -81,16 +81,16 @@ const Admin = () => {
                     title: "Erro",
                     text: "Existe um campo não preenchido",
                     icon: "warning"
-                })
+                });
             } if (password !== confPass) {
                 return Swal.fire({
                     title: "Erro",
                     text: "As senhas não são iguais",
                     icon: "warning"
-                })
+                });
             }
 
-            await auth.signUp("1", name, email, password, confPass);
+            await _auth.signUp("1", name, email, password, confPass);
 
             if (nameRef.current) nameRef.current.value = "";
             if (emailRef.current) emailRef.current.value = "";
@@ -107,7 +107,7 @@ const Admin = () => {
             console.log(error)
             Swal.fire({
                 title: "Erro",
-                text: `O usuário não foi cadastrado por conta de um erro: ${error}`,
+                text: "O usuário não foi cadastrado por conta de um erro",
                 icon: "error"
             });
         }
@@ -118,12 +118,6 @@ const Admin = () => {
             const nameSubject = nameSubjectRef.current?.value;
             const teacherId = teacherIdRef.current?.value;
 
-            console.log(userIds);
-
-            
-            console.log(nameSubject)
-            console.log(teacherId)
-
             if(!nameSubject || !teacherId){
                 return Swal.fire({
                     title: "Erro",
@@ -132,7 +126,7 @@ const Admin = () => {
                 });
             }
 
-            await subject.postSubject(nameSubject, teacherId);
+            await _subject.postSubject(nameSubject, teacherId);
 
             if (nameSubjectRef.current) nameSubjectRef.current.value = "";
             if (teacherIdRef.current) teacherIdRef.current.value = "";
@@ -145,7 +139,7 @@ const Admin = () => {
         } catch (error) {
             return Swal.fire({
                 title: "Erro",
-                text: `A matéria não foi cadastrada por conta de um erro: ${error}`,
+                text: "A matéria não foi cadastrada por conta de um erro",
                 icon: "error"
             });
         }
