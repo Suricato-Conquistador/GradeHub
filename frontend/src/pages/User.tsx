@@ -4,6 +4,7 @@ import User from "../server/routes/user";
 import Button from "../components/Button";
 import Auth from "../server/routes/auth";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router";
 
 
 const _user = new User();
@@ -23,6 +24,16 @@ const UserPage = () => {
         email: ""
     });
 
+    const [userType, setUserType] = useState<string>();
+
+    const navigate = useNavigate();
+
+    const backPage = () => {
+        if(userType === "0") navigate("/admin");
+        if(userType === "1") navigate("/teacher");
+        if(userType === "2") navigate("/student");
+    };
+
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -32,6 +43,7 @@ const UserPage = () => {
                     email: userData.email || ""
                 });
                 setUserId(userData.id);
+                setUserType(userData.userType);
             } catch (error) {
                 console.error("Erro ao buscar dados do usuário:", error);
             }
@@ -142,6 +154,7 @@ const UserPage = () => {
                 <Input labelId={"pass2"} labelName={"Confirme sua nova senha"} type={"password"} reference={pass2Ref} />
                 <Button title={"Mudar senha"} onClick={verifyPassword} />
             </div>
+            <Button title={"Voltar"} onClick={backPage} />
         </>
     );
 };
