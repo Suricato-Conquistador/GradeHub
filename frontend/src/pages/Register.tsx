@@ -4,6 +4,7 @@ import Button from "../components/Button";
 import Input from "../components/Input";
 import Auth from "../server/routes/auth";
 import Swal from "sweetalert2";
+import '../style/Register.scss';
 
 
 const auth = new Auth();
@@ -67,16 +68,27 @@ const Register = () => {
     };
 
     return(
+        <div className="content">
         <div className="cadastro-user">
             <h2>Registre-se no GradeHub</h2>
-            <Input labelId="name" labelName="Nome" type="text" reference={nameRef} />
-            <Input labelId="email" labelName="Email" type="email" reference={emailRef} />
-            <Input labelId="password" labelName="Senha" type="password" reference={passwordRef} />
-            <Input labelId="confirmPassword" labelName="Confirme a senha" type="password" reference={confPassRef} />
 
-            <Button title="Cadastrar" onClick={signUp} />
-            <Button title="Já possui uma conta?" onClick={toLoginPage} />
+            <div className="input-container">
+                <Input labelId="name" labelName="Nome" type="text" reference={nameRef} />
+            </div>
+            <div className="input-container">
+                <Input labelId="email" labelName="Email" type="email" reference={emailRef} />
+            </div>
+            <div className="input-container">
+                <Input labelId="password" labelName="Senha" type="password" reference={passwordRef} />
+            </div>
+            <div className="input-container">
+                <Input labelId="confirmPassword" labelName="Confirme a senha" type="password" reference={confPassRef} />
+            </div>
+
+            <button onClick={signUp}>Cadastrar</button>
+            <button onClick={toLoginPage}>Já possui uma conta?</button>
         </div>
+    </div>
     );
 };
 
