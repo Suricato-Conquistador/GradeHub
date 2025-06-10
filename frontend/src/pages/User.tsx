@@ -3,6 +3,8 @@ import Input from "../components/Input";
 import User from "../server/routes/user";
 import Button from "../components/Button";
 import Auth from "../server/routes/auth";
+import '../style/User.scss';
+
 
 const user = new User();
 const auth = new Auth();
@@ -91,25 +93,26 @@ const UserPage = () => {
     };
 
     return (
-        <>
-            {/* Foto do usuário?? */}
-            <div></div>
-
-            {/* Botões */}
-            <div>
-                <h1>EDITAR USUÁRIO</h1>
-                <Input labelId="name" labelName="Nome" type="text" value={formData.name} onChange={handleChange} reference={nameRef} />
-                <Input labelId="email" labelName="Email" type="email" value={formData.email} onChange={handleChange} reference={emailRef} />
-                <Button title={"Mudar dados"} onClick={changeUserData} />
-
-                <h3>Deseja mudar sua senha?</h3>
-                <Input labelId={"password"} labelName={"Senha"} type={"password"} reference={passwordRef} />
-                <Input labelId={"pass1"} labelName={"Digite sua nova senha"} type={"password"} reference={pass1Ref} />
-                <Input labelId={"pass2"} labelName={"Confirme sua nova senha"} type={"password"} reference={pass2Ref} />
-                <Button title={"Mudar senha"} onClick={verifyPassword} />
-            </div>
-        </>
-    );
+        <div className="userpage-container">
+          {/* Foto do usuário?? */}
+          <div></div>
+      
+          {/* Botões */}
+          <div>
+            <h1>EDITAR USUÁRIO</h1>
+            <Input labelId="name" labelName="Nome" type="text" value={formData.name} onChange={handleChange} reference={nameRef} />
+            <Input labelId="email" labelName="Email" type="email" value={formData.email} onChange={handleChange} reference={emailRef} />
+            <Button title={"Mudar dados"} onClick={changeUserData} />
+      
+            <h3>Deseja mudar sua senha?</h3>
+            <Input labelId={"password"} labelName={"Senha"} type={"password"} reference={passwordRef} />
+            <Input labelId={"pass1"} labelName={"Digite sua nova senha"} type={"password"} reference={pass1Ref} />
+            <Input labelId={"pass2"} labelName={"Confirme sua nova senha"} type={"password"} reference={pass2Ref} />
+            <Button title={"Mudar senha"} onClick={verifyPassword} />
+          </div>
+        </div>
+      );
+      
 };
 
 export default UserPage;

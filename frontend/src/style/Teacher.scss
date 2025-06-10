@@ -1,0 +1,148 @@
+$primary-color: #34495e;
+$secondary-color: #2980b9;
+$button-bg: $secondary-color;
+$button-hover: darken($button-bg, 10%);
+$text-color: #2c3e50;
+$border-color: #ccc;
+$background-color: #f9fbfd;
+$card-bg: #fff;
+$font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+.teacher-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: $background-color;
+  font-family: $font-family;
+  color: $text-color;
+
+  > div {
+    margin-bottom: 30px;
+  }
+
+  /* Select container */
+  .select-container {
+    max-width: 400px;
+
+    select {
+      width: 100%;
+      padding: 8px 12px;
+      font-size: 1rem;
+      border: 1.5px solid $border-color;
+      border-radius: 6px;
+      background-color: #fff;
+      cursor: pointer;
+      transition: border-color 0.3s ease;
+
+      &:focus {
+        outline: none;
+        border-color: $secondary-color;
+        box-shadow: 0 0 5px rgba($secondary-color, 0.5);
+      }
+    }
+  }
+
+  /* Table styling */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1rem;
+    background-color: $card-bg;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+
+    thead {
+      background-color: $secondary-color;
+      color: #fff;
+
+      th {
+        padding: 12px 15px;
+        text-align: left;
+        font-weight: 700;
+        border-bottom: 2px solid darken($secondary-color, 10%);
+      }
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid $border-color;
+
+        &:hover {
+          background-color: lighten($secondary-color, 40%);
+        }
+
+        td {
+          padding: 12px 15px;
+        }
+      }
+    }
+  }
+
+  /* Form inputs and buttons */
+  .form-group {
+    max-width: 400px;
+    margin-top: 15px;
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: $primary-color;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 8px 12px;
+      font-size: 1rem;
+      border: 1.5px solid $border-color;
+      border-radius: 6px;
+      transition: border-color 0.3s ease;
+
+      &:focus {
+        outline: none;
+        border-color: $secondary-color;
+        box-shadow: 0 0 5px rgba($secondary-color, 0.5);
+      }
+    }
+  }
+
+  button {
+    margin-top: 15px;
+    background-color: $button-bg;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: $button-hover;
+    }
+  }
+
+  p {
+    font-style: italic;
+    color: $primary-color;
+    font-weight: 600;
+  }
+
+  @media (max-width: 600px) {
+    padding: 15px;
+
+    .select-container,
+    .form-group {
+      max-width: 100%;
+    }
+
+    table {
+      font-size: 0.9rem;
+    }
+
+    button {
+      width: 100%;
+    }
+  }
+}

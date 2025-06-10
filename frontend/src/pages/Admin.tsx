@@ -151,61 +151,65 @@ const Admin = () => {
         }
     };
 
-    return(
+    return (
         <div className="admin-container">
-            <div className="cadastros">
-                <div className="cadastro-user">
-                    <h2>Cadastro Aluno / Professor</h2>
-                    <Input labelId="name" labelName="Nome" type="text" reference={nameRef} />
-                    <Input labelId="email" labelName="Email" type="email" reference={emailRef} />
-                    <Input labelId="password" labelName="Senha" type="password" reference={passwordRef} />
-                    <Input labelId="confirmPassword" labelName="Confirme a senha" type="password" reference={confPassRef} />
-
-                    <Button title="Cadastrar usuário" onClick={signUp} />
-                </div>
-
-                <div className="cadastro-materia">
-                    <h2>Cadastro Matéria</h2>
-                    <Input labelId="subjectName" labelName="Nome da matéria" type="text" reference={nameSubjectRef} />
-                    <Select options={userIds} optionsName={userNames} title="Selecione o professor" reference={teacherIdRef} />
-                    <Button title="Cadastrar matéria" onClick={postSubject} />
-                </div>
+          <div className="cadastros">
+            <div className="cadastro-user">
+              <h2>Cadastro de Professor</h2>
+              <Input labelId="name" labelName="Nome" type="text" reference={nameRef} />
+              <Input labelId="email" labelName="Email" type="email" reference={emailRef} />
+              <Input labelId="password" labelName="Senha" type="password" reference={passwordRef} />
+              <Input labelId="confirmPassword" labelName="Confirme a senha" type="password" reference={confPassRef} />
+      
+              <Button title="Cadastrar usuário" onClick={signUp} />
             </div>
-
-            <div className="tabelas">
-                <Button title="Tela de usuário" onClick={toUserPage} />
-                <section>
-                    <h3>Professores</h3>
-                    <Table
-                        thList={["RA", "Nome", "Email"]}
-                        tdList={teacherTable}
-                        renderRow={(row) => (
-                            <>
-                                <td>{row.ra}</td>
-                                <td>{row.name}</td>
-                                <td>{row.email}</td>
-                            </>
-                        )}
-                    />
-                </section>
-
-                <section>
-                    <h3>Alunos</h3>
-                    <Table
-                        thList={["RA", "Nome", "Email"]}
-                        tdList={studentTable}
-                        renderRow={(row) => (
-                            <>
-                                <td>{row.ra}</td>
-                                <td>{row.name}</td>
-                                <td>{row.email}</td>
-                            </>
-                        )}
-                    />
-                </section>
+      
+            <div className="cadastro-materia">
+              <h2>Cadastro Matéria</h2>
+              <Input labelId="subjectName" labelName="Nome da matéria" type="text" reference={nameSubjectRef} />
+              <Select options={userIds} optionsName={userNames} title="Selecione o professor" reference={teacherIdRef} />
+              <Button title="Cadastrar matéria" onClick={postSubject} />
             </div>
+          </div>
+      
+          <div className="tabelas">
+            <div className="tabelas-header">
+              <Button title="Tela de usuário" onClick={toUserPage} />
+            </div>
+      
+            <section>
+              <h3>Professores</h3>
+              <Table
+                thList={["RA", "Nome", "Email"]}
+                tdList={teacherTable}
+                renderRow={(row) => (
+                  <>
+                    <td>{row.ra}</td>
+                    <td>{row.name}</td>
+                    <td>{row.email}</td>
+                  </>
+                )}
+              />
+            </section>
+      
+            <section>
+              <h3>Alunos</h3>
+              <Table
+                thList={["RA", "Nome", "Email"]}
+                tdList={studentTable}
+                renderRow={(row) => (
+                  <>
+                    <td>{row.ra}</td>
+                    <td>{row.name}</td>
+                    <td>{row.email}</td>
+                  </>
+                )}
+              />
+            </section>
+          </div>
         </div>
-    );
+      );
+      
 };
 
 export default Admin;

@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const AppError = require('../../utils/appError');
 const grade = require('./grade');
 const subject = require('./subject');
+const userPreferences = require('./userPreferences');
 
 const user = sequelize.define('users', 
   {
@@ -104,6 +105,11 @@ subject.belongsTo(user, {
 
 user.hasMany(grade, {foreignKey: 'studentId'});
 grade.belongsTo(user, {
+  foreignKey: 'studentId',
+});
+
+user.hasMany(userPreferences, {foreignKey: 'studentId'});
+userPreferences.belongsTo(user, {
   foreignKey: 'studentId',
 });
 
