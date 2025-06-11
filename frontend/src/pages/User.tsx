@@ -4,6 +4,8 @@ import User from "../server/routes/user";
 import Button from "../components/Button";
 import Auth from "../server/routes/auth";
 import '../style/User.scss';
+import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
 
 
 const user = new User();
@@ -22,6 +24,8 @@ const UserPage = () => {
         name: "",
         email: ""
     });
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -92,6 +96,55 @@ const UserPage = () => {
         }
     };
 
+    const deleteAccount = async () => {
+        try {
+            const result = await Swal.fire({
+                title: "Digite a sua senha",
+                input: "password",
+                inputLabel: "Senha",
+                inputPlaceholder: "Digite sua senha",
+                inputAttributes: {
+                    autocapitalize: "off",
+                    autocorrect: "off"
+                },
+                showCancelButton: true,
+                confirmButtonText: "Confirmar",
+                cancelButtonText: "Cancelar"
+            });
+
+            if (result.isConfirmed && result.value) {
+                const password = result.value;
+
+                const response = await auth.login(formData.email, password);
+                
+                if(response.status === "success") {
+                    await user.deleteUser(userId);
+
+                    Swal.fire({
+                        title: "Sucesso",
+                        text: "O usuário foi deletado com sucesso",
+                        icon: "success"
+                    });
+
+                    navigate("/")
+                } else {
+                    Swal.fire({
+                        title: "Erro",
+                        text: "Senha incorreta",
+                        icon: "error"
+                    });
+                }
+            }
+        } catch (error) {
+            console.log(error)
+            Swal.fire({
+                title: "Erro",
+                text: "O usuário não foi cadastrado por conta de um erro",
+                icon: "error"
+            });
+        }
+    };
+
     return (
         <div className="userpage-container">
           {/* Foto do usuário?? */}
@@ -109,6 +162,9 @@ const UserPage = () => {
             <Input labelId={"pass1"} labelName={"Digite sua nova senha"} type={"password"} reference={pass1Ref} />
             <Input labelId={"pass2"} labelName={"Confirme sua nova senha"} type={"password"} reference={pass2Ref} />
             <Button title={"Mudar senha"} onClick={verifyPassword} />
+
+            <h3>Deletar conta</h3>
+            <Button title={"Deletar conta"} onClick={deleteAccount} />
           </div>
         </div>
       );

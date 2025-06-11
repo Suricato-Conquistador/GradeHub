@@ -75,7 +75,6 @@ const Register = () => {
     };
 
     const handleModalSave = () => {
-        // Aqui você pode salvar as preferências do usuário
         console.log('Preferências salvas:', {
             optInMarketing,
             optInAnalytics
