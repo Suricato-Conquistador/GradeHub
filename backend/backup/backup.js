@@ -11,7 +11,7 @@ function createDatabaseBackup(tempFile, finalFile, dbName) {
     const backupFinalPath = path.join(__dirname, finalFile);
 
     return new Promise((resolve, reject) => {
-        const command = `pg_dump -U ${DB_USERNAME} -h ${DB_HOST} -p ${DB_PORT} -F p -f ${backupTempPath} ${dbName}`;
+        const command = `pg_dump -U ${DB_USERNAME} -h ${DB_HOST} -p ${DB_PORT} -F c -f ${backupTempPath} ${dbName}`;
         
         exec(command, {
             env: { ...process.env, PGPASSWORD: DB_PASSWORD }, 

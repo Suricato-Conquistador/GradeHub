@@ -9,7 +9,9 @@ cron.schedule('* * 1 * *', async () => {
     try {
         await deleteUserBackup();
         
-        await createDatabaseBackup('backup_api_temp.sql', 'backup_api.sql', DB_NAME);
+        const now = Date.now();
+
+        await createDatabaseBackup(`${now}backup_api_temp.dump`, `${now}backup_api.dump`, DB_NAME);
     } catch(error) {
         console.error("Erro: ", error);
     }
@@ -17,7 +19,9 @@ cron.schedule('* * 1 * *', async () => {
 
 cron.schedule('0 * * * *', async () => {
     try {
-        await createDatabaseBackup('backup_secondary_temp.sql', 'backup_secondary.sql' , SEC_DB_NAME);
+        const now = Date.now();
+
+        await createDatabaseBackup(`${now}backup_secondary_temp.dump`, `${now}backup_secondary.dump` , SEC_DB_NAME);
     } catch(error) {
         console.error("Erro: ", error);
     }
