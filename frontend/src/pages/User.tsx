@@ -6,10 +6,14 @@ import Auth from "../server/routes/auth";
 import '../style/User.scss';
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
+import Table from "../components/Table";
+import { UserPreferenceTable } from "../interfaces/userPreference.interface";
+import UserPreference from "../server/routes/userPreference";
 
 
 const user = new User();
 const auth = new Auth();
+const userPreference = new UserPreference();
 
 const UserPage = () => {
     const nameRef = createRef<HTMLInputElement>();
@@ -25,7 +29,18 @@ const UserPage = () => {
         email: ""
     });
 
+    const [userPreferences, setUserPreferences] = useState<UserPreferenceTable[]>([]);
+    
     const navigate = useNavigate();
+
+    const fetchUserPreferences = async () => {
+        try {
+            const preferences = await userPreference.getUserPreferenceById(userId);
+            setUserPreferences(preferences);
+        } catch (error) {
+            console.error("Erro ao buscar preferências do usuário:", error);
+        }
+    }
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -163,10 +178,26 @@ const UserPage = () => {
             <Input labelId={"pass2"} labelName={"Confirme sua nova senha"} type={"password"} reference={pass2Ref} />
             <Button title={"Mudar senha"} onClick={verifyPassword} />
 
+            <h3>Preferencia de Privacidade</h3>
+            <Table
+              thList={["Nome", "Aceita", "Rejeitada","Status"]}
+              tdList={userPreferences}
+              renderRow={(row:UserPreferenceTable) => (
+                <>
+                  <td>{row.preference}</td>
+                  <td>{row.approved}</td>
+                  <td>{row.rejected}</td>
+                  <td>{row.status}</td>
+                </>
+              )}
+            />
+
             <h3>Deletar conta</h3>
             <Button title={"Deletar conta"} onClick={deleteAccount} />
+            
           </div>
         </div>
+        
       );
       
 };
