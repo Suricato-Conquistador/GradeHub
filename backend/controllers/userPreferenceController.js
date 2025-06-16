@@ -75,10 +75,8 @@ const updateUserPreference = catchAsync(async (req, res) => {
     // Atualizar campos de data baseado no status
     if (status) {
       updateData.accepted = new Date();
-      updateData.rejected = null;
     } else {
       updateData.rejected = new Date();
-      updateData.accepted = null;
     }
   }
 

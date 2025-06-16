@@ -66,7 +66,48 @@ $user-border-color: #ccc;
       background-color: $user-primary-hover;
     }
   }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 0.95rem;
+    color: $user-text-color;
+  
+    thead {
+      background-color: $user-primary-color;
+      color: $user-white;
+  
+      th {
+        text-align: left;
+        padding: 12px 15px;
+        font-weight: 600;
+        border-bottom: 2px solid darken($user-primary-color, 10%);
+      }
+    }
+  
+    tbody {
+      tr {
+        background-color: $user-background;
+        border-bottom: 1px solid $user-border-color;
+  
+        &:nth-child(even) {
+          background-color: lighten($user-background, 3%);
+        }
+  
+        &:hover {
+          background-color: lighten($user-primary-color, 45%);
+        }
+  
+        td {
+          padding: 12px 15px;
+          vertical-align: middle;
+        }
+      }
+    }
+  }
+  
 }
+
 
 // Para garantir que o componente use essa classe, basta no JSX colocar a div externa assim:
 

@@ -1,7 +1,7 @@
 export interface UserPreferenceTable {
     preference: string;
-    approved: boolean;
-    rejected: boolean;
+    approved: Date;
+    rejected: Date;
     userId: number;
     status: boolean;
 };

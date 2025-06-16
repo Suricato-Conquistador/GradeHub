@@ -5,8 +5,11 @@ import Input from "../components/Input";
 import Auth from "../server/routes/auth";
 import Swal from "sweetalert2";
 import '../style/Register.scss';
+import UserPreference from "../server/routes/userPreference";
 
 const auth = new Auth();
+const userPreference = new UserPreference();
+
 
 const Register = () => {
     const [showModal, setShowModal] = useState(false);
@@ -23,7 +26,7 @@ const Register = () => {
     const toLoginPage = () => {
         navigate("/")
     }
-
+    
     const signUp = async () => {
         try {
             const name = nameRef.current?.value;
@@ -44,9 +47,13 @@ const Register = () => {
                     icon: "warning"
                 });
             }
+            
+            const userData = await auth.signUp("2", name, email, password, confPass);
+            console.log(userData);
+            await userPreference.postUserPreference(userData.data.id,"1",optInAnalytics,optInAnalytics, optInAnalytics );
+            await userPreference.postUserPreference(userData.data.id,"0",optInMarketing,optInMarketing,optInMarketing,);
 
-            await auth.signUp("2", name, email, password, confPass);
-
+            
             if (nameRef.current) nameRef.current.value = "";
             if (emailRef.current) emailRef.current.value = "";
             if (passwordRef.current) passwordRef.current.value = "";
@@ -75,10 +82,7 @@ const Register = () => {
     };
 
     const handleModalSave = () => {
-        console.log('Preferências salvas:', {
-            optInMarketing,
-            optInAnalytics
-        });
+        console.log("Preferências salvas:", { optInMarketing, optInAnalytics });
         setShowModal(false);
     };
 
@@ -108,7 +112,6 @@ const Register = () => {
                 <button onClick={toLoginPage}>Já possui uma conta?</button>
             </div>
 
-            {/* Modal de Preferências de Privacidade */}
             {showModal && (
                 <div className="modal-overlay" onClick={handleModalClose}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>

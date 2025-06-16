@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import Table from "../components/Table";
 import { UserPreferenceTable } from "../interfaces/userPreference.interface";
 import UserPreference from "../server/routes/userPreference";
+import { formatDateString } from "../utils/formatDate";
 
 
 const user = new User();
@@ -16,14 +17,21 @@ const auth = new Auth();
 const userPreference = new UserPreference();
 
 const UserPage = () => {
+    const [showModal, setShowModal] = useState(false);
     const nameRef = createRef<HTMLInputElement>();
     const emailRef = createRef<HTMLInputElement>();
     const passwordRef = createRef<HTMLInputElement>();
+    
 
     const pass1Ref = createRef<HTMLInputElement>();
     const pass2Ref = createRef<HTMLInputElement>();
-
+    
+    const [optInAnalytics, setOptInAnalytics] = useState(false);
+    const [optInMarketing, setOptInMarketing] = useState(false);
     const [userId, setUserId] = useState<number>(0);
+    const [preferenceId0, setPreferenceId0] = useState<number>(0);
+    const [preferenceId1, setPreferenceId1] = useState<number>(0);
+
     const [formData, setFormData] = useState({
         name: "",
         email: ""
@@ -33,15 +41,10 @@ const UserPage = () => {
     
     const navigate = useNavigate();
 
-    const fetchUserPreferences = async () => {
-        try {
-            const preferences = await userPreference.getUserPreferenceById(userId);
-            setUserPreferences(preferences);
-        } catch (error) {
-            console.error("Erro ao buscar preferências do usuário:", error);
-        }
-    }
-
+    
+    
+    
+    
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -55,9 +58,39 @@ const UserPage = () => {
                 console.error("Erro ao buscar dados do usuário:", error);
             }
         };
-
+        
         fetchUser();
     }, []);
+    
+    useEffect(() => {
+        const fetchUserPreferences = async () => {
+            try {
+                const userData = await user.getLoggedUser();
+                const preferences = await userPreference.getUserPreferenceByStudentId(userData.id);
+                console.log(preferences.preferences);
+                setUserPreferences(preferences.preferences);
+                setPreferenceId0(preferences.preferences[0]?.id);
+                setPreferenceId1(preferences.preferences[1]?.id);
+            } catch (error) {
+                console.error("Erro ao buscar preferências do usuário:", error);
+            }
+        }
+        fetchUserPreferences();
+    },[])
+
+    const patchUserPreference = async ( status1: boolean, status2: boolean) => {
+        try {
+            
+            await userPreference.patchUserPreference(preferenceId0, "0" , status1);
+            await userPreference.patchUserPreference(preferenceId1, "1" ,status2);
+
+        
+        } catch (error) {
+            console.error("Erro ao atualizar preferências do usuário:", error);
+            
+        }
+    }
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
@@ -160,6 +193,16 @@ const UserPage = () => {
         }
     };
 
+    const handleModalClose = () => {
+        setShowModal(false);
+    };
+
+    const handleModalSave = () => {
+        console.log("Preferências salvas:", { optInMarketing, optInAnalytics });
+        setShowModal(false);
+        patchUserPreference(optInMarketing, optInAnalytics);
+    };
+
     return (
         <div className="userpage-container">
           {/* Foto do usuário?? */}
@@ -182,18 +225,64 @@ const UserPage = () => {
             <Table
               thList={["Nome", "Aceita", "Rejeitada","Status"]}
               tdList={userPreferences}
-              renderRow={(row:UserPreferenceTable) => (
+              renderRow={(row:any) => (
                 <>
-                  <td>{row.preference}</td>
-                  <td>{row.approved}</td>
-                  <td>{row.rejected}</td>
-                  <td>{row.status}</td>
+                  <td>{row.type == "0" ? "Emails de Marketing" : "Participar de Feedbacks" }</td>
+                  <td>{row.accepted ? formatDateString(row.accepted.toString()):"-"}</td>
+                  <td>{row.rejected ? formatDateString(row.rejected.toString()):"-"}</td>
+                  <td>{row.status ? "Aceito": "Rejeitado" }</td>
                 </>
-              )}
+              )
+            }
             />
-
+           < Button title={"Atualizar preferências"} onClick={() => setShowModal(true)} />
             <h3>Deletar conta</h3>
             <Button title={"Deletar conta"} onClick={deleteAccount} />
+            {showModal && (
+                <div className="modal-overlay" onClick={handleModalClose}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h3>Preferências de Privacidade</h3>
+
+                        </div>
+                        
+                        <div className="modal-body">
+                            <div className="checkbox-container">
+                                <label className="checkbox-label">
+                                    <input
+                                        type="checkbox"
+                                        checked={optInMarketing}
+                                        onChange={() => setOptInMarketing(!optInMarketing)}
+                                    />
+                                    <span className="checkmark"></span>
+                                    Desejo receber e-mails sobre novas matérias.
+                                </label>
+                            </div>
+
+                            <div className="checkbox-container">
+                                <label className="checkbox-label">
+                                    <input
+                                        type="checkbox"
+                                        checked={optInAnalytics } 
+                                        onChange={() => setOptInAnalytics(!optInAnalytics)}
+                                    />
+                                    <span className="checkmark"></span>
+                                    Autorizo o uso dos meus dados acadêmicos para fins estatísticos.
+                                </label>
+                            </div>
+                        </div>
+
+                        <div className="modal-footer">
+                            <button className="btn-secondary" onClick={handleModalClose}>
+                                Cancelar
+                            </button>
+                            <button className="btn-primary" onClick={handleModalSave}>
+                                Salvar Preferências
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
             
           </div>
         </div>
