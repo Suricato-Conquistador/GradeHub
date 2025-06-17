@@ -1,0 +1,120 @@
+$user-primary-color: #3498db;
+$user-primary-hover: #2980b9;
+$user-background: #f9fafc;
+$user-text-color: #2c3e50;
+$user-white: #ffffff;
+$user-border-color: #ccc;
+
+.userpage-container {
+  max-width: 480px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: $user-white;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: $user-text-color;
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    text-align: center;
+    color: $user-primary-color;
+  }
+
+  h3 {
+    margin-top: 40px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: darken($user-primary-color, 10%);
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 10px 0 20px;
+    border: 1px solid $user-border-color;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+
+    &:focus {
+      border-color: $user-primary-color;
+      outline: none;
+      box-shadow: 0 0 5px rgba($user-primary-color, 0.5);
+    }
+  }
+
+  button {
+    background-color: $user-primary-color;
+    color: $user-white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: $user-primary-hover;
+    }
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 0.95rem;
+    color: $user-text-color;
+  
+    thead {
+      background-color: $user-primary-color;
+      color: $user-white;
+  
+      th {
+        text-align: left;
+        padding: 12px 15px;
+        font-weight: 600;
+        border-bottom: 2px solid darken($user-primary-color, 10%);
+      }
+    }
+  
+    tbody {
+      tr {
+        background-color: $user-background;
+        border-bottom: 1px solid $user-border-color;
+  
+        &:nth-child(even) {
+          background-color: lighten($user-background, 3%);
+        }
+  
+        &:hover {
+          background-color: lighten($user-primary-color, 45%);
+        }
+  
+        td {
+          padding: 12px 15px;
+          vertical-align: middle;
+        }
+      }
+    }
+  }
+  
+}
+
+
+// Para garantir que o componente use essa classe, basta no JSX colocar a div externa assim:
+
+/*
+
+<div className="userpage-container">
+  ...seu conteúdo...
+</div>
+
+*/

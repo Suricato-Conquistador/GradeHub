@@ -7,6 +7,7 @@ import { GradeTableTeacher } from "../interfaces/grade.interface";
 import SubjectStudents from "../server/routes/subjectStudents";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import '../style/Teacher.scss';
 import Swal from "sweetalert2";
 
 
@@ -99,43 +100,56 @@ const Teacher = () => {
         }
     };
 
-    return(
-        <>
-            {/* Cadastrar notas */}
-            <div>
-                <Select options={subjectIds} optionsName={subjectNames} title="Selecione a matéria" 
-                value={selectedSubjectId?.toString() ?? ""} 
-                onChange={(e: any) => setSelectedSubjectId(Number(e.target.value))} />
-            </div>
-            <div>
-                {selectedSubjectId !== null && (
-                    tableData.length > 0 ? (
-                        <div>
-                            <Table
-                            thList={["RA", "Aluno", "Nota"]}
-                            tdList={tableData}
-                            renderRow={(row) => (
-                                <>
-                                    <td>{row.ra}</td>
-                                    <td>{row.name}</td>
-                                    <td>{row.grade}</td>
-                                </>
-                            )}
-                            />
-                            <Select options={gradeIds} optionsName={studentsName} title={"Selecione o nome do aluno"}
-                            value={selectedStudentId?.toString() ?? ""}
-                            onChange={(e: any) => setSelectedStudentId(Number(e.target.value))}
-                            />
-                            <Input labelId={"grade"} labelName={"Nota"} type={"text"} reference={gradeRef} />
-                            <Button title={"Cadastrar Nota"} onClick={postGrade} />
-                        </div>
-                    ) : (
-                        <p>Não existem alunos cadastrados nessa matéria.</p>
-                    )
-                )}
-            </div>
-        </>
-    );
+    return (
+        <div className="teacher-container">
+          <div className="select-container">
+            <Select
+              options={subjectIds}
+              optionsName={subjectNames}
+              title="Selecione a matéria"
+              value={selectedSubjectId?.toString() ?? ""}
+              onChange={(e: any) => setSelectedSubjectId(Number(e.target.value))}
+            />
+          </div>
+      
+          <div>
+            {selectedSubjectId !== null && (
+              tableData.length > 0 ? (
+                <>
+                  <div className="select-container">
+                    <Select
+                      options={gradeIds}
+                      optionsName={studentsName}
+                      title={"Selecione o nome do aluno"}
+                      value={selectedStudentId?.toString() ?? ""}
+                      onChange={(e: any) => setSelectedStudentId(Number(e.target.value))}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <Input labelId={"grade"} labelName={"Nota"} type={"text"} reference={gradeRef} />
+                  </div>
+                  <Button title={"Cadastrar Nota"} onClick={postGrade} />
+                  <Table
+                    thList={["RA", "Aluno", "Nota"]}
+                    tdList={tableData}
+                    renderRow={(row) => (
+                      <>
+                        <td>{row.ra}</td>
+                        <td>{row.name}</td>
+                        <td>{row.grade}</td>
+                      </>
+                    )}
+                  />
+                </>
+                
+              ) : (
+                <p>Não existem alunos cadastrados nessa matéria.</p>
+              )
+            )}
+          </div>
+        </div>
+      );
+      
 };
 
 export default Teacher;

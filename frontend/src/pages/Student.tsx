@@ -6,6 +6,7 @@ import Subject from "../server/routes/subject";
 import User from "../server/routes/user";
 import SubjectStudents from "../server/routes/subjectStudents";
 import { GradeTableStudent } from "../interfaces/grade.interface";
+import  '../style/Student.scss';
 import Swal from "sweetalert2";
 
 
@@ -100,34 +101,33 @@ const Student = () => {
         }
     };
 
-    return(
-        <>
-            <div>
-                <div>
-                    {subjectsId.map((e, index) => (
-                        <div key={e}>
-                            <p>{subjectsName[index]}</p>
-                            <p>Professor: {teachersName[index]}</p>
-                            <Button title="Matricular" onClick={() => postGrade(e)} />
-                        </div>
-                    ))}
-                </div>
-                <div>
-                    <Table
-                        thList={["Matéria", "Nota", "Professor"]}
-                        tdList={gradeTable}
-                        renderRow={(row) => (
-                            <>
-                                <td>{row.subject}</td>
-                                <td>{row.grade}</td>
-                                <td>{row.teacher}</td>
-                            </>
-                        )}
-                    />
-                </div>
-            </div>
-        </>
-    );
+    return (
+        <div className="student-container">
+          <div>
+            {subjectsId.map((e, index) => (
+              <div key={e}>
+                <p>{subjectsName[index]}</p>
+                <p>Professor: {teachersName[index]}</p>
+                <Button title="Matricular" onClick={() => postGrade(e)} />
+              </div>
+            ))}
+          </div>
+          <div>
+            <Table
+              thList={["Matéria", "Nota", "Professor"]}
+              tdList={gradeTable}
+              renderRow={(row) => (
+                <>
+                  <td>{row.subject}</td>
+                  <td>{row.grade}</td>
+                  <td>{row.teacher}</td>
+                </>
+              )}
+            />
+          </div>
+        </div>
+      );
+      
 };
 
 export default Student;

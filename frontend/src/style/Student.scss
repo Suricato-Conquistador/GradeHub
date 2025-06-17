@@ -1,0 +1,120 @@
+$primary-color: #2c3e50;
+$secondary-color: #3498db;
+$button-bg: $secondary-color;
+$button-hover: darken($button-bg, 10%);
+$text-color: #333;
+$border-color: #ddd;
+$background-color: #f5f7fa;
+$card-bg: #fff;
+$font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+.student-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: $background-color;
+  font-family: $font-family;
+  color: $text-color;
+
+  > div:first-child {
+    margin-bottom: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    > div {
+      background-color: $card-bg;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      flex: 1 1 280px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      p {
+        margin: 6px 0;
+        font-weight: 600;
+      }
+
+      p:first-child {
+        font-size: 1.1rem;
+        color: $primary-color;
+      }
+
+      button {
+        align-self: flex-start;
+        margin-top: 12px;
+        background-color: $button-bg;
+        color: #fff;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: $button-hover;
+        }
+      }
+    }
+  }
+
+  > div:last-child {
+    background-color: $card-bg;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    padding: 20px;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 1rem;
+
+      thead {
+        background-color: $secondary-color;
+        color: #fff;
+
+        th {
+          padding: 12px 15px;
+          text-align: left;
+          font-weight: 700;
+          border-bottom: 2px solid darken($secondary-color, 10%);
+        }
+      }
+
+      tbody {
+        tr {
+          border-bottom: 1px solid $border-color;
+
+          &:hover {
+            background-color: lighten($secondary-color, 40%);
+          }
+
+          td {
+            padding: 12px 15px;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 650px) {
+    > div:first-child {
+      flex-direction: column;
+
+      > div {
+        flex: 1 1 100%;
+      }
+    }
+
+    > div:last-child {
+      padding: 10px;
+
+      table {
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
