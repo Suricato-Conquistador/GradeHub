@@ -12,9 +12,9 @@ import UserPreference from "../server/routes/userPreference";
 import { formatDateString } from "../utils/formatDate";
 
 
-const user = new User();
-const auth = new Auth();
-const userPreference = new UserPreference();
+const _user = new User();
+const _auth = new Auth();
+const _userPreference = new UserPreference();
 
 const UserPage = () => {
     const [showModal, setShowModal] = useState(false);
@@ -38,22 +38,26 @@ const UserPage = () => {
     });
 
     const [userPreferences, setUserPreferences] = useState<UserPreferenceTable[]>([]);
-    
+    const [userType, setUserType] = useState<string>();
+
     const navigate = useNavigate();
 
-    
-    
-    
-    
+    const backPage = () => {
+        if(userType === "0") navigate("/admin");
+        if(userType === "1") navigate("/teacher");
+        if(userType === "2") navigate("/student");
+    };
+
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const userData = await user.getLoggedUser();
+                const userData = await _user.getLoggedUser();
                 setFormData({
                     name: userData.name || "",
                     email: userData.email || ""
                 });
                 setUserId(userData.id);
+                setUserType(userData.userType);
             } catch (error) {
                 console.error("Erro ao buscar dados do usuário:", error);
             }
@@ -65,8 +69,8 @@ const UserPage = () => {
     useEffect(() => {
         const fetchUserPreferences = async () => {
             try {
-                const userData = await user.getLoggedUser();
-                const preferences = await userPreference.getUserPreferenceByStudentId(userData.id);
+                const userData = await _user.getLoggedUser();
+                const preferences = await _userPreference.getUserPreferenceByStudentId(userData.id);
                 console.log(preferences.preferences);
                 setUserPreferences(preferences.preferences);
                 setPreferenceId0(preferences.preferences[0]?.id);
@@ -81,8 +85,8 @@ const UserPage = () => {
     const patchUserPreference = async ( status1: boolean, status2: boolean) => {
         try {
             
-            await userPreference.patchUserPreference(preferenceId0, "0" , status1);
-            await userPreference.patchUserPreference(preferenceId1, "1" ,status2);
+            await _userPreference.patchUserPreference(preferenceId0, "0" , status1);
+            await _userPreference.patchUserPreference(preferenceId1, "1" ,status2);
 
         
         } catch (error) {
@@ -105,19 +109,41 @@ const UserPage = () => {
         const email = emailRef.current?.value;
 
         try {
-            const response = await user.patchUser(userId, name, email, undefined);
-            console.log(response);
+            await _user.patchUser(userId, name, email, undefined);
+            Swal.fire({
+                title: "Sucesso",
+                text: "Os dados foram alterados com sucesso",
+                icon: "success"
+            });
+
         } catch (e) {
-            console.log(e)
+            Swal.fire({
+                title: "Erro",
+                text: "Os dados não foram alterados por conta de um erro",
+                icon: "error"
+            });
         }
     };
 
     const changePassword = async (pass1: string) => {
         try {
-            const response = await user.patchUser(userId, undefined, undefined, pass1);
-            console.log(response)
+            await _user.patchUser(userId, undefined, undefined, pass1);
+
+            Swal.fire({
+                title: "Sucesso",
+                text: "Sua senha foi alterada com sucesso",
+                icon: "success"
+            });
+
+            if (passwordRef.current) passwordRef.current.value = "";
+            if (pass1Ref.current) pass1Ref.current.value = "";
+            if (pass2Ref.current) pass2Ref.current.value = "";
         } catch(e) {
-            console.log(e);
+            Swal.fire({
+                title: "Erro",
+                text: "A senha não foi mudada por conta de um erro",
+                icon: "error"
+            });
         }
     };
 
@@ -126,21 +152,31 @@ const UserPage = () => {
         const pass1 = pass1Ref.current?.value;
         const pass2 = pass2Ref.current?.value;
         if(!password || !pass1 || !pass2) {
-            console.log("CAMPO VAZIO")
-            return
+            return Swal.fire({
+                title: "Erro",
+                text: "Existe um campo não preenchido",
+                icon: "warning"
+            });
         }
 
         if(pass1 !== pass2) {
-            console.log("Senhas diferentes");
-            return
+            return Swal.fire({
+                title: "Erro",
+                text: "As senhas não são iguais",
+                icon: "warning"
+            });
         }
 
-        const response = await auth.login(formData.email, password);
+        const response = await _auth.login(formData.email, password);
 
         if(response.status === "success") {
             changePassword(pass1);
         } else {
-            console.log("Senha errada");
+            Swal.fire({
+                title: "Erro",
+                text: "Senha incorreta",
+                icon: "error"
+            });
         }
     };
 
@@ -163,10 +199,10 @@ const UserPage = () => {
             if (result.isConfirmed && result.value) {
                 const password = result.value;
 
-                const response = await auth.login(formData.email, password);
+                const response = await _auth.login(formData.email, password);
                 
                 if(response.status === "success") {
-                    await user.deleteUser(userId);
+                    await _user.deleteUser(userId);
 
                     Swal.fire({
                         title: "Sucesso",
@@ -288,7 +324,6 @@ const UserPage = () => {
         </div>
         
       );
-      
 };
 
 export default UserPage;

@@ -7,12 +7,13 @@ import User from "../server/routes/user";
 import SubjectStudents from "../server/routes/subjectStudents";
 import { GradeTableStudent } from "../interfaces/grade.interface";
 import  '../style/Student.scss';
+import Swal from "sweetalert2";
 
 
-const user = new User()
-const grade = new Grade()
-const subject = new Subject()
-const subjectStudents = new SubjectStudents()
+const _user = new User()
+const _grade = new Grade()
+const _subject = new Subject()
+const _subjectStudents = new SubjectStudents()
 
 const Student = () => {
     const [subjectsId, setSubjectsId] = useState<number[]>([]);
@@ -26,8 +27,8 @@ const Student = () => {
     useEffect(() => {
         const fetchSubjects = async () => {
             try {
-                const allSubjects = await subject.getSubjects();
-                const enrolledSubjects = await subjectStudents.getSubjectsByStudentId();
+                const allSubjects = await _subject.getSubjects();
+                const enrolledSubjects = await _subjectStudents.getSubjectsByStudentId();
 
                 const enrolledSubjectIds = enrolledSubjects.map((s: any) => s.subject_id);
 
@@ -40,7 +41,7 @@ const Student = () => {
                 const teacherNames = await Promise.all(
                     teacherIds.map(async (id: number) => {
                         try {
-                            const teacherData = await user.getUserById(id);
+                            const teacherData = await _user.getUserById(id);
                             return teacherData.name;
                         } catch (e) {
                             console.error(`Erro ao buscar professor com ID ${id}:`, e);
@@ -63,12 +64,12 @@ const Student = () => {
     useEffect(() => {
         const fetchGrades = async () => {
             try {
-                const enrolledSubjects = await subjectStudents.getSubjectsByStudentId();
+                const enrolledSubjects = await _subjectStudents.getSubjectsByStudentId();
 
                 const tableData = await Promise.all(
                     enrolledSubjects.map(async (entry: any) => {
-                        const subjectData = await subject.getSubjectById(entry.subject_id);
-                        const teacherData = await user.getUserById(subjectData.teacherId);
+                        const subjectData = await _subject.getSubjectById(entry.subject_id);
+                        const teacherData = await _user.getUserById(subjectData.teacherId);
 
                         return {
                             subject: subjectData.name,
@@ -89,10 +90,14 @@ const Student = () => {
 
     const postGrade = async (subjectId: number) => {
         try {
-            await grade.postGrade(subjectId);
+            await _grade.postGrade(subjectId);
             setRefresh(prev => !prev);
         } catch (error) {
-            console.error("Erro ao matricular:", error);
+            Swal.fire({
+                title: "Erro",
+                text: "A matéria não foi cadastrada por conta de um erro",
+                icon: "error"
+            });
         }
     };
 

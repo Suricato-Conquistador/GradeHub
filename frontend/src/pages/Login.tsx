@@ -7,7 +7,7 @@ import Auth from "../server/routes/auth";
 import '../style/Login.scss';
 
 
-const auth = new Auth();
+const _auth = new Auth();
 
 const Login = () => {
     const emailRef = createRef<HTMLInputElement>();
@@ -32,9 +32,7 @@ const Login = () => {
                 });
             }
 
-            const response = await auth.login(email, password);
-            console.log(response);
-            console.log(response.userType);
+            const response = await _auth.login(email, password);
             sessionStorage.setItem("authentication", response.token);
             
             Swal.fire({
@@ -51,7 +49,7 @@ const Login = () => {
             console.log(error)
             Swal.fire({
                 title: "Erro",
-                text: `O usuário não foi logado por conta de um erro: ${error}`,
+                text: "O usuário não foi logado por conta de um erro",
                 icon: "error"
               })
         }

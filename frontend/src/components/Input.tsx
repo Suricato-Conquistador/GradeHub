@@ -1,18 +1,7 @@
-type Props = {
-    labelId: string;
-    labelName: string;
-    type: string;
-    classLabel?: string;
-    name?: string;
-    value?: string;
-    classInput?: string;
-    reference?: any;
-    onChange?: any;
-    checked?: any;
-};
+import { InputProps } from "../interfaces/input.interface";
 
 
-const Input = (props: Props) => {
+const Input = (props: InputProps) => {
     return(
         <>
             <label htmlFor={props.labelId} className={props.classLabel}>{props.labelName}</label>

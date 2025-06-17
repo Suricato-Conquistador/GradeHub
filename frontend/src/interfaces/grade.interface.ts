@@ -5,7 +5,7 @@ export interface GradeTableStudent {
 };
 
 export interface GradeTableTeacher {
-  id: number,
+  id: number;
   ra: string;
   name: string;
   grade: string | number;

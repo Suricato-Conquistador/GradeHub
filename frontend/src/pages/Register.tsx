@@ -7,9 +7,9 @@ import Swal from "sweetalert2";
 import '../style/Register.scss';
 import UserPreference from "../server/routes/userPreference";
 
-const auth = new Auth();
-const userPreference = new UserPreference();
 
+const _auth = new Auth();
+const _userPreference = new UserPreference();
 
 const Register = () => {
     const [showModal, setShowModal] = useState(false);
@@ -48,12 +48,11 @@ const Register = () => {
                 });
             }
             
-            const userData = await auth.signUp("2", name, email, password, confPass);
+            const userData = await _auth.signUp("2", name, email, password, confPass);
             console.log(userData);
-            await userPreference.postUserPreference(userData.data.id,"1",optInAnalytics,optInAnalytics, optInAnalytics );
-            await userPreference.postUserPreference(userData.data.id,"0",optInMarketing,optInMarketing,optInMarketing,);
+            await _userPreference.postUserPreference(userData.data.id,"1",optInAnalytics,optInAnalytics, optInAnalytics );
+            await _userPreference.postUserPreference(userData.data.id,"0",optInMarketing,optInMarketing,optInMarketing,);
 
-            
             if (nameRef.current) nameRef.current.value = "";
             if (emailRef.current) emailRef.current.value = "";
             if (passwordRef.current) passwordRef.current.value = "";
@@ -71,7 +70,7 @@ const Register = () => {
             console.log(error)
             Swal.fire({
                 title: "Erro",
-                text: `O usuário não foi cadastrado por conta de um erro: ${error}`,
+                text: "O usuário não foi cadastrado por conta de um erro",
                 icon: "error"
             });
         }
