@@ -9,6 +9,7 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 import '../style/Teacher.scss';
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router";
 
 
 const _grade = new Grade();
@@ -27,6 +28,8 @@ const Teacher = () => {
     const [studentsName, setStudentsName] = useState<string[]>([]);
 
     const [refresh, setRefresh] = useState(false);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchSubjects = async () => {
@@ -100,7 +103,11 @@ const Teacher = () => {
         }
     };
 
+    const toUserPage = () => navigate("/user");
+
     return (
+      <>
+        <Button title="Tela de usuário" onClick={toUserPage} className="button-user" />
         <div className="teacher-container">
           <div className="select-container">
             <Select
@@ -148,6 +155,7 @@ const Teacher = () => {
             )}
           </div>
         </div>
+      </>
       );
       
 };

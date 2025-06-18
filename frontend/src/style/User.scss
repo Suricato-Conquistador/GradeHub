@@ -5,6 +5,24 @@ $user-text-color: #2c3e50;
 $user-white: #ffffff;
 $user-border-color: #ccc;
 
+.button-back {
+  background-color: $user-primary-color;
+  color: $user-white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-left: 520px;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: $user-primary-hover;
+  }
+}
+
 .userpage-container {
   max-width: 480px;
   margin: 40px auto;

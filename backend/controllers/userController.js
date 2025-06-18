@@ -115,6 +115,12 @@ const deleteUser = catchAsync(async (req, res, next) => {
         return next(new AppError("Invalid user id", 400));
     }
 
+    result.name = null;
+    result.email = null;
+    result.userType = null;
+    result.userCode = null;
+    result.password = null;
+
     await result.destroy();
 
     await deletedIds.create({ number: id });

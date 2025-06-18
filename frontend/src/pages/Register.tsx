@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router";
 import { createRef, useState } from "react";
-import Button from "../components/Button";
 import Input from "../components/Input";
 import Auth from "../server/routes/auth";
 import Swal from "sweetalert2";

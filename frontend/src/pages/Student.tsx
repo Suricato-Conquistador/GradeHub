@@ -8,6 +8,7 @@ import SubjectStudents from "../server/routes/subjectStudents";
 import { GradeTableStudent } from "../interfaces/grade.interface";
 import  '../style/Student.scss';
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router";
 
 
 const _user = new User()
@@ -88,6 +89,12 @@ const Student = () => {
         fetchGrades();
     }, [refresh]);
 
+    const navigate = useNavigate();
+
+    const toUserPage = () => {
+        navigate("/user");
+    };
+
     const postGrade = async (subjectId: number) => {
         try {
             await _grade.postGrade(subjectId);
@@ -102,6 +109,8 @@ const Student = () => {
     };
 
     return (
+        <>
+        <Button title="Tela de usuário" onClick={toUserPage} className="button-user" />
         <div className="student-container">
           <div>
             {subjectsId.map((e, index) => (
@@ -126,6 +135,7 @@ const Student = () => {
             />
           </div>
         </div>
+    </>
       );
       
 };

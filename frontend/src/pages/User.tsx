@@ -240,9 +240,12 @@ const UserPage = () => {
     };
 
     return (
+        <>
+        <Button title={"Voltar"} onClick={backPage} className="button-back" />
         <div className="userpage-container">
           {/* Foto do usuário?? */}
           <div></div>
+
       
           {/* Botões */}
           <div>
@@ -323,6 +326,7 @@ const UserPage = () => {
             
           </div>
         </div>
+    </>
         
       );
 };
