@@ -7,7 +7,7 @@
 ## 🔐 LGPD na Prática
 
 O GradeHub utiliza a Lei Gel de Proteção de Dados (LGPD) e implementa os seguintes princípios:
-- 🪪 **Transparência:** O usuário pode .  
+- 🪪 **Transparência:** O usuário pode editar seus dados, além de saber onde estão sendo usados.  
 - ✅❌ **Opt-in / Opt-out:** O usuário escolhe se quer ou não compartilhar seus dados.  
 - 🧹 **Eliminação:** Os dados pessoais podem ser apagados a pedido.
 
