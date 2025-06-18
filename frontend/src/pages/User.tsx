@@ -240,9 +240,12 @@ const UserPage = () => {
     };
 
     return (
+        <>
+        <Button title={"Voltar"} onClick={backPage} className="button-back" />
         <div className="userpage-container">
           {/* Foto do usuário?? */}
           <div></div>
+
       
           {/* Botões */}
           <div>
@@ -300,10 +303,11 @@ const UserPage = () => {
                                     <input
                                         type="checkbox"
                                         checked={optInAnalytics } 
+                                        defaultChecked 
                                         onChange={() => setOptInAnalytics(!optInAnalytics)}
                                     />
                                     <span className="checkmark"></span>
-                                    Autorizo o uso dos meus dados acadêmicos para fins estatísticos.
+                                    Autorizo receber pedidos de feedback.
                                 </label>
                             </div>
                         </div>
@@ -322,6 +326,7 @@ const UserPage = () => {
             
           </div>
         </div>
+    </>
         
       );
 };

@@ -168,7 +168,7 @@ const Admin = () => {
       
           <div className="tabelas">
             <div className="tabelas-header">
-              <Button title="Tela de usuário" onClick={toUserPage} />
+              <Button title="Tela de usuário" onClick={toUserPage} className="button-user" />
             </div>
       
             <section>

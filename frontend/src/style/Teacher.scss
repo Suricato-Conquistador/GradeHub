@@ -1,3 +1,5 @@
+$user-primary-color: #3498db;
+$user-primary-hover: #2980b9;
 $primary-color: #34495e;
 $secondary-color: #2980b9;
 $button-bg: $secondary-color;
@@ -7,6 +9,25 @@ $border-color: #ccc;
 $background-color: #f9fbfd;
 $card-bg: #fff;
 $font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+.button-user {
+  background-color: $user-primary-color;
+  color: #FFF;
+  border: none;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-left: 20px;
+  transition: background-color 0.3s;
+
+
+  &:hover {
+    background-color: $user-primary-hover;
+  }
+}
 
 .teacher-container {
   max-width: 800px;

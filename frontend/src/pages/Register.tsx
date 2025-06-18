@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router";
 import { createRef, useState } from "react";
-import Button from "../components/Button";
 import Input from "../components/Input";
 import Auth from "../server/routes/auth";
 import Swal from "sweetalert2";
@@ -142,7 +141,7 @@ const Register = () => {
                                         onChange={() => setOptInAnalytics(!optInAnalytics)}
                                     />
                                     <span className="checkmark"></span>
-                                    Autorizo o uso dos meus dados acadêmicos para fins estatísticos.
+                                    Autorizo receber pedidos de feedback.
                                 </label>
                             </div>
                         </div>
