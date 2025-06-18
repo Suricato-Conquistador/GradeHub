@@ -142,7 +142,7 @@ const Register = () => {
                                         onChange={() => setOptInAnalytics(!optInAnalytics)}
                                     />
                                     <span className="checkmark"></span>
-                                    Autorizo o uso dos meus dados acadêmicos para fins estatísticos.
+                                    Autorizo receber pedidos de feedback.
                                 </label>
                             </div>
                         </div>
