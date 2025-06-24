@@ -5,6 +5,7 @@ import Teacher from "./pages/Teacher";
 import Student from "./pages/Student";
 import UserPage from "./pages/User";
 import Register from "./pages/Register";
+import Preference from "./pages/Preference";
 
 const App = () => {
   return(
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="/teacher" element={<Teacher />} />
         <Route path="/student" element={<Student />} />
         <Route path="/user" element={<UserPage />} />
+        <Route path="/terms" element={<Preference />} />
       </Routes>
     </Router>
   )
