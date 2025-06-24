@@ -1,9 +1,9 @@
 const { authentication, restrictTo } = require("../controllers/authController");
-const { createUserPreference, getUserPreferenceById, updateUserPreference, getUserPreferencesByStudentId } = require("../controllers/userPreferenceController");
+const { postUserPreference, getUserPreferenceById, updateUserPreference, getUserPreferencesByStudentId } = require("../controllers/userPreferenceController");
 
 const router = require("express").Router();
 
-router.route('/').post(authentication, restrictTo('0'), createUserPreference);
+router.route('/').post(authentication, restrictTo('0'), postUserPreference);
 router.route('/student/:id').get(authentication, getUserPreferencesByStudentId);
 router.route('/:id').get(authentication, getUserPreferenceById);
 router.route('/:id').patch(authentication, restrictTo('0'), updateUserPreference);

@@ -4,14 +4,16 @@
 const userPreferences = require('../db/models/userPreferences');
 const { Op } = require('sequelize');
 const catchAsync = require('../utils/catchAsync');
+const { post } = require('../routes/userPreferenceRouter');
 
 // Criar nova preferência de usuário
-const createUserPreference = catchAsync(async (req, res) => {
-    const { studentId, preferenceId, date } = req.body;
+const postUserPreference = catchAsync(async (req, res) => {
+    const { studentId, preferenceId, status, date } = req.body;
 
     const newPreference = await userPreferences.create({
         studentId,
         preferenceId,
+        status,
         date
     });
 
@@ -49,28 +51,31 @@ const getUserPreferencesByStudentId = catchAsync(async (req, res) => {
 });
 
 // Atualizar preferência de usuário
+
 const updateUserPreference = catchAsync(async (req, res) => {
     const { id } = req.params;
-    const { studentId, preferenceId, date } = req.body;
+    const { studentId, preferenceId, status, date } = req.body;
 
-    const existingPreference = await userPreferences.findByPk(id);
+    const preference = await userPreferences.findByPk(id);
 
-    if (!existingPreference) {
+    if (!preference) {
         return res.status(404).json({
             status: 'error',
             message: 'Preferência de usuário não encontrada'
         });
     }
 
-    existingPreference.studentId = studentId;
-    existingPreference.preferenceId = preferenceId;
-    existingPreference.date = date;
-    await existingPreference.save();
+    await preference.update({
+        studentId,
+        preferenceId,
+        status,
+        date
+    });
 
     return res.status(200).json({
         status: 'success',
         data: {
-            preference: existingPreference
+            preference
         }
     });
 });
@@ -100,7 +105,7 @@ const getUserPreferenceById = catchAsync(async (req, res) => {
 
 
 module.exports = {
-    createUserPreference,
+    postUserPreference,
     getUserPreferencesByStudentId,
     updateUserPreference,
     getUserPreferenceById

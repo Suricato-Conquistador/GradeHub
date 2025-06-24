@@ -25,6 +25,10 @@ const userPreferences = sequelize.define('userPreferences', {
       key: 'id',
     },
   },
+  status: {
+    type: DataTypes.BOOLEAN,
+    allowNull: true
+  },
   date: {
     type: DataTypes.DATE,
     allowNull: true

@@ -12,7 +12,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      StudentId: {
+      studentId: {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
@@ -20,13 +20,17 @@ module.exports = {
           key: 'id'
         }
       },
-      prefrenceId: {
+      preferenceId: {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
           model: 'preferences',
           key: 'id'
         }
+      },
+      status: {
+        type: Sequelize.BOOLEAN,
+        allowNull: true
       },
       date: {
         type: Sequelize.DATE,
