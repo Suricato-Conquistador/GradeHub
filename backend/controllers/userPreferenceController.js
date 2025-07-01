@@ -27,12 +27,68 @@ const postUserPreference = catchAsync(async (req, res) => {
 
 // Buscar preferências de usuário por ID do estudante
 const getUserPreferencesByStudentId = catchAsync(async (req, res) => {
-    const { studentId } = req.params;
+    const { id } = req.params;
 
     const preferences = await userPreferences.findAll({
         where: {
-            studentId
+            studentId:id,
         }
+    });
+
+    if (!preferences || preferences.length === 0) {
+        return res.status(404).json({
+            status: 'error',
+            message: 'Preferências de usuário não encontradas'
+        });
+    }
+
+    return res.status(200).json({
+        status: 'success',
+        data: {
+            preferences
+        }
+    });
+});
+
+const getUserPreferencesByPreferenceId = catchAsync(async (req, res) => {
+    const { id } = req.params;
+
+    const preferences = await userPreferences.findAll({
+        where: {
+            preferenceId: id,
+        }
+    });
+
+    if (!preferences || preferences.length === 0) {
+        return res.status(404).json({
+            status: 'error',
+            message: 'Preferências de usuário não encontradas'
+        });
+    }
+
+    return res.status(200).json({
+        status: 'success',
+        data: {
+            preferences
+        }
+    });
+});
+
+const getUserPreferencesByStudentIdAndPreferenceId = catchAsync(async (req, res) => {
+    const { studentId, preferenceId } = req.query;
+
+    const whereClause = {};
+
+    if (studentId) {
+        whereClause.studentId = studentId;
+    }
+
+    if (preferenceId) {
+        whereClause.preferenceId = preferenceId;
+    }
+
+    const preferences = await userPreferences.findAll({
+        where: whereClause
     });
 
     if (!preferences || preferences.length === 0) {
@@ -54,7 +110,7 @@ const getUserPreferencesByStudentId = catchAsync(async (req, res) => {
 
 const updateUserPreference = catchAsync(async (req, res) => {
     const { id } = req.params;
-    const { studentId, preferenceId, status, date } = req.body;
+    const { status, date } = req.body;
 
     const preference = await userPreferences.findByPk(id);
 
@@ -66,10 +122,9 @@ const updateUserPreference = catchAsync(async (req, res) => {
     }
 
     await preference.update({
-        studentId,
-        preferenceId,
-        status,
-        date
+
+        status: status,
+        date: new Date(date)
     });
 
     return res.status(200).json({
@@ -107,6 +162,8 @@ const getUserPreferenceById = catchAsync(async (req, res) => {
 module.exports = {
     postUserPreference,
     getUserPreferencesByStudentId,
+    getUserPreferencesByPreferenceId,
+    getUserPreferencesByStudentIdAndPreferenceId,  
     updateUserPreference,
     getUserPreferenceById
 };

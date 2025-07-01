@@ -1,7 +1,8 @@
 export interface UserPreferenceTable {
-    preference: string;
-    approved: Date;
-    rejected: Date;
-    userId: number;
+    id: number;
+    studentId: number;
+    preferenceId: number;
     status: boolean;
+    date: Date;
+    updatedAt: string; // Added the missing property
 };

@@ -133,7 +133,7 @@ const Preference = () => {
         </div>
       ))}
       <button onClick={addTerm}>Adicionar Termo</button>
-      <button onClick={postTerm}>Salvar Preferências</button>
+      <button onClick={postTerm}>Salvar Termo</button>
       {/* <button onClick={getPreferenceVersion}>ver version</button> */}
     </div>
   );

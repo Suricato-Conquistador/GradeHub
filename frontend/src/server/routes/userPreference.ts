@@ -12,7 +12,12 @@ export default class UserPreference {
     };
 
     public async getUserPreferenceById(id: number) {
-        const response = await api.get(`${baseUrl}/${id}`);
+        const response = await api.get(`${baseUrl}/student/${id}`);
+        return response.data.data;
+    };
+
+    public async getUserPreferenceByStudentIdAndPreferenceId(studentId: number, preferenceId: number) {
+        const response = await api.get(`${baseUrl}/student/${studentId}/preference/${preferenceId}`);
         return response.data.data;
     };
 
@@ -26,16 +31,15 @@ export default class UserPreference {
         return response.data;
     };
 
-    public async patchUserPreference(id: number, preference: string, status: boolean) {
-
-
-            const response = await api.patch(`${baseUrl}/${id}`,{
-                type: preference,
-         
-                status: status})
-           
+    public async patchUserPreference(id: number, status: boolean) {
+        const response = await api.patch(`${baseUrl}/${id}`, {
+            status: status,
+            date: new Date() 
+        });
         return response.data;
     }
+
+
     public async getUserPreferenceByStudentId(studentId: number) {
         const response = await api.get(`${baseUrl}/student/${studentId}`);
         return response.data.data;

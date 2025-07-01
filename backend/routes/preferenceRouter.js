@@ -4,7 +4,7 @@ const {  createPreference, getAllPreferences, getPreferenceById, updatePreferenc
 const router = require('express').Router();
 
 router.route('/').post(authentication, restrictTo('0'), createPreference);
-router.route('/').get(authentication, getAllPreferences);
+router.route('/').get( getAllPreferences);
 router.route('/:id').get(authentication, getPreferenceById);
 router.route('/:id').patch(authentication, restrictTo('0'), updatePreference);
 

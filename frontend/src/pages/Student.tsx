@@ -9,21 +9,23 @@ import { GradeTableStudent } from "../interfaces/grade.interface";
 import  '../style/Student.scss';
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
-
+import UserPreference from "../server/routes/userPreference";
+import PreferenceVersion from "../server/routes/preferenceVersion";
 
 const _user = new User()
 const _grade = new Grade()
 const _subject = new Subject()
 const _subjectStudents = new SubjectStudents()
+const _userPreference = new UserPreference();
+const _preferenceVersion = new PreferenceVersion();
 
 const Student = () => {
     const [subjectsId, setSubjectsId] = useState<number[]>([]);
     const [subjectsName, setSubjectsName] = useState<string[]>([]);
     const [teachersName, setTeachersName] = useState<string[]>([]);
-
     const [gradeTable, setGradeTable] = useState<GradeTableStudent[]>([]);
-
     const [refresh, setRefresh] = useState(false);
+    const [lastKnownPreferenceVersion, setLastKnownPreferenceVersion] = useState<number | null>(null);
 
     useEffect(() => {
         const fetchSubjects = async () => {
@@ -88,6 +90,52 @@ const Student = () => {
 
         fetchGrades();
     }, [refresh]);
+
+    useEffect(() => {
+        const fetchAndComparePreferenceVersions = async () => {
+            try {
+                const preferenceVersionsResponse = await _preferenceVersion.getPreferenceVersions();
+                console.log("Versões de preferências:", preferenceVersionsResponse);
+                const preferenceVersions = preferenceVersionsResponse.versions;
+                console.log("Versões de preferências obtidas:", preferenceVersions);
+
+                if (!preferenceVersions || preferenceVersions.length === 0) {
+                    throw new Error("Nenhuma versão de preferências encontrada.");
+                }
+
+                const latestPreferenceVersion = Math.max(
+                    ...preferenceVersions.map((version: { versionId: number }) => version.versionId)
+                );
+
+                const userPreferencesResponse = await _userPreference.getUserPreferenceById(userId);
+                console.log("Preferências do usuário:", userPreferencesResponse);
+                const userPreferences = userPreferencesResponse.preferences;
+                console.log("Preferências do usuário obtidas:", userPreferences);
+
+                if (!userPreferences || userPreferences.length === 0) {
+                    throw new Error("Nenhuma preferência do usuário encontrada.");
+                }
+
+                const userHasLatestVersion = userPreferences.some(
+                    (userPref: { versionId: number }) => userPref.versionId === latestPreferenceVersion
+                );
+
+                if (!userHasLatestVersion) {
+                    Swal.fire({
+                        title: "Novos Termos de Uso",
+                        text: "Uma nova versão dos termos de uso foi criada. Por favor, revise os novos termos.",
+                        icon: "info",
+                    });
+                }
+
+                setLastKnownPreferenceVersion(latestPreferenceVersion);
+            } catch (error) {
+                console.error("Erro ao verificar as versões de preferências:", error);
+            }
+        };
+
+        fetchAndComparePreferenceVersions();
+    }, []);
 
     const navigate = useNavigate();
 
