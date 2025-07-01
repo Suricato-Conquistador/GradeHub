@@ -34,3 +34,8 @@ Através de um sistema completo de **CRUD (Create, Read, Update, Delete)**, os u
 
 ---
 
+### 🧹 Eliminação
+
+Através da opção **editar usuário**, o usuário terá a possibilidade de solicitar a exclusão de conta para que seus dados sejam removidos. Em caso da necessidade de restaurar um backup os dados do usuário se manterão removidos.
+
+---
