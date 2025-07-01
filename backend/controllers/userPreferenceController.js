@@ -4,119 +4,167 @@
 const userPreferences = require('../db/models/userPreferences');
 const { Op } = require('sequelize');
 const catchAsync = require('../utils/catchAsync');
+const { post } = require('../routes/userPreferenceRouter');
 
-// Criar nova preferência do usuário
-const createUserPreference = catchAsync(async (req, res) => {
-  const { type, studentId, status } = req.body;
+// Criar nova preferência de usuário
+const postUserPreference = catchAsync(async (req, res) => {
+    const { studentId, preferenceId, status, date } = req.body;
 
-  const preferenceData = {
-    type,
-    studentId,
-    status,
-    accepted: status ? new Date() : null,
-    rejected: !status ? new Date() : null
-  };
-
-  const newPreference = await userPreferences.create(preferenceData);
-
-  return res.status(201).json({
-    status: 'success',
-    data: {
-      preference: newPreference
-    }
-  });
-});
-
-// Buscar preferência por ID
-const getUserPreferenceById = catchAsync(async (req, res) => {
-  const { id } = req.params;
-
-  const preference = await userPreferences.findByPk(id);
-
-  if (!preference) {
-    return res.status(404).json({
-      status: 'error',
-      message: 'Preferência não encontrada'
+    const newPreference = await userPreferences.create({
+        studentId,
+        preferenceId,
+        status,
+        date
     });
-  }
 
-  return res.status(200).json({
-    status: 'success',
-    data: {
-      preference
-    }
-  });
-});
-
-// Atualizar preferência do usuário
-const updateUserPreference = catchAsync(async (req, res) => {
-  const { id } = req.params;
-  const { type, studentId, status } = req.body;
-
-  const preference = await userPreferences.findByPk(id);
-
-  if (!preference) {
-    return res.status(404).json({
-      status: 'error',
-      message: 'Preferência não encontrada'
+    return res.status(201).json({
+        status: 'success',
+        data: {
+            preference: newPreference
+        }
     });
-  }
-
-  // Preparar dados para atualização
-  const updateData = {};
-
-  if (studentId !== undefined) {
-    updateData.studentId = studentId;
-  }
-
-  if (status !== undefined) {
-    updateData.status = status;
-    
-    // Atualizar campos de data baseado no status
-    if (status) {
-      
-      if (preference.status !== status) {updateData.accepted = new Date()
-      };
-      
-    } else {
-      if (preference.status !== status) {updateData.rejected = new Date()};
-    }
-  }
-
-  await preference.update(updateData);
-
-  return res.status(200).json({
-    status: 'success',
-    data: {
-      preference
-    }
-  });
 });
 
-// Buscar preferências por ID do estudante
+// Buscar preferências de usuário por ID do estudante
 const getUserPreferencesByStudentId = catchAsync(async (req, res) => {
-  const { studentId } = req.params;
+    const { id } = req.params;
 
-  const preferences = await userPreferences.findAll({
-    where: {
-      studentId: studentId
-    },
-    order: [['createdAt', 'DESC']]
-  });
+    const preferences = await userPreferences.findAll({
+        where: {
+            studentId:id,
+        }
+    });
 
-  return res.status(200).json({
-    status: 'success',
-    results: preferences.length,
-    data: {
-      preferences
+    if (!preferences || preferences.length === 0) {
+        return res.status(404).json({
+            status: 'error',
+            message: 'Preferências de usuário não encontradas'
+        });
     }
-  });
+
+    return res.status(200).json({
+        status: 'success',
+        data: {
+            preferences
+        }
+    });
 });
+
+const getUserPreferencesByPreferenceId = catchAsync(async (req, res) => {
+    const { id } = req.params;
+
+    const preferences = await userPreferences.findAll({
+        where: {
+            preferenceId: id,
+        }
+    });
+
+    if (!preferences || preferences.length === 0) {
+        return res.status(404).json({
+            status: 'error',
+            message: 'Preferências de usuário não encontradas'
+        });
+    }
+
+    return res.status(200).json({
+        status: 'success',
+        data: {
+            preferences
+        }
+    });
+});
+
+const getUserPreferencesByStudentIdAndPreferenceId = catchAsync(async (req, res) => {
+    const { studentId, preferenceId } = req.query;
+
+    const whereClause = {};
+
+    if (studentId) {
+        whereClause.studentId = studentId;
+    }
+
+    if (preferenceId) {
+        whereClause.preferenceId = preferenceId;
+    }
+
+    const preferences = await userPreferences.findAll({
+        where: whereClause
+    });
+
+    if (!preferences || preferences.length === 0) {
+        return res.status(404).json({
+            status: 'error',
+            message: 'Preferências de usuário não encontradas'
+        });
+    }
+
+    return res.status(200).json({
+        status: 'success',
+        data: {
+            preferences
+        }
+    });
+});
+
+// Atualizar preferência de usuário
+
+const updateUserPreference = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const { status, date } = req.body;
+
+    const preference = await userPreferences.findByPk(id);
+
+    if (!preference) {
+        return res.status(404).json({
+            status: 'error',
+            message: 'Preferência de usuário não encontrada'
+        });
+    }
+
+    await preference.update({
+
+        status: status,
+        date: new Date(date)
+    });
+
+    return res.status(200).json({
+        status: 'success',
+        data: {
+            preference
+        }
+    });
+});
+
+// Buscar preferência de usuário por ID
+const getUserPreferenceById = catchAsync(async (req, res) => {
+    const { id } = req.params;
+
+    const preference = await userPreferences.findByPk(id);
+
+    if (!preference) {
+        return res.status(404).json({
+            status: 'error',
+            message: 'Preferência de usuário não encontrada'
+        });
+    }
+
+    return res.status(200).json({
+        status: 'success',
+        data: {
+            preference
+        }
+    });
+});
+
+
+
 
 module.exports = {
-  createUserPreference,
-  getUserPreferenceById,
-  updateUserPreference,
-  getUserPreferencesByStudentId
+    postUserPreference,
+    getUserPreferencesByStudentId,
+    getUserPreferencesByPreferenceId,
+    getUserPreferencesByStudentIdAndPreferenceId,  
+    updateUserPreference,
+    getUserPreferenceById
 };
 

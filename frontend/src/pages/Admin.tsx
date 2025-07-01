@@ -68,6 +68,10 @@ const Admin = () => {
     const toUserPage = () => {
         navigate("/user");
     };
+    
+    const toTermsPage = () => {
+        navigate("/terms");
+    }
 
     const signUp = async () => {
         try {
@@ -169,6 +173,7 @@ const Admin = () => {
           <div className="tabelas">
             <div className="tabelas-header">
               <Button title="Tela de usuário" onClick={toUserPage} className="button-user" />
+              <Button title="Tela de termos" onClick={toTermsPage} className="button-user" />
             </div>
       
             <section>

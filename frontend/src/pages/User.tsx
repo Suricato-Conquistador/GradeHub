@@ -10,11 +10,12 @@ import Table from "../components/Table";
 import { UserPreferenceTable } from "../interfaces/userPreference.interface";
 import UserPreference from "../server/routes/userPreference";
 import { formatDateString } from "../utils/formatDate";
-
+import Preference from "../server/routes/preference";
 
 const _user = new User();
 const _auth = new Auth();
 const _userPreference = new UserPreference();
+const _preference = new Preference();
 
 const UserPage = () => {
     const [showModal, setShowModal] = useState(false);
@@ -31,6 +32,10 @@ const UserPage = () => {
     const [userId, setUserId] = useState<number>(0);
     const [preferenceId0, setPreferenceId0] = useState<number>(0);
     const [preferenceId1, setPreferenceId1] = useState<number>(0);
+    const [preferences, setPreferences] = useState<{ id: number; name: string; description: string; optional: boolean }[]>([]);
+    const [nonOptionalAccepted, setNonOptionalAccepted] = useState(false);
+    
+
 
     const [formData, setFormData] = useState({
         name: "",
@@ -66,35 +71,68 @@ const UserPage = () => {
         fetchUser();
     }, []);
     
-    useEffect(() => {
-        const fetchUserPreferences = async () => {
-            try {
-                const userData = await _user.getLoggedUser();
-                const preferences = await _userPreference.getUserPreferenceByStudentId(userData.id);
-                console.log(preferences.preferences);
-                setUserPreferences(preferences.preferences);
-                setPreferenceId0(preferences.preferences[0]?.id);
-                setPreferenceId1(preferences.preferences[1]?.id);
-            } catch (error) {
-                console.error("Erro ao buscar preferências do usuário:", error);
-            }
-        }
-        fetchUserPreferences();
-    },[])
 
-    const patchUserPreference = async ( status1: boolean, status2: boolean) => {
+    const getUserPreferences = async () => {
+        // console.log(userId)
         try {
+            const data = await _userPreference.getUserPreferenceById(userId);
+            const userPreferences = data.preferences; // Acessa o array de preferências do usuário
+            setUserPreferences(userPreferences);
             
-            await _userPreference.patchUserPreference(preferenceId0, "0" , status1);
-            await _userPreference.patchUserPreference(preferenceId1, "1" ,status2);
-
-        
+            console.log("Dados do usuário:", userPreferences);
         } catch (error) {
-            console.error("Erro ao atualizar preferências do usuário:", error);
-            
+            console.error("Erro ao buscar preferências do usuário:", error);
         }
     }
 
+
+
+    const getPreference = async () => {
+        try {
+            const data = await _preference.getPreferences(); // Busca todas as preferências
+            const preferences = data.preferences; // Acessa o array de preferências
+
+            if (!Array.isArray(preferences) || preferences.length === 0) {
+                console.error("Nenhuma preferência encontrada.");
+                setPreferences([]);
+                return [];
+            }
+
+            // Encontra o maior versionId
+            const maxVersionId = Math.max(...preferences.map(pref => pref.versionId));
+
+            // Filtra as preferências com o maior versionId
+            const latestPreferences = preferences.filter(pref => pref.versionId === maxVersionId);
+            
+            setPreferences(latestPreferences); // Atualiza o estado com as preferências filtradas
+            // console.log("Preferências com o maior versionId:", latestPreferences);
+            // console.log(preferences)
+            return latestPreferences; // Retorna as preferências filtradas
+        } catch (error) {
+            console.error("Erro ao obter preferências:", error);
+            Swal.fire({
+                title: "Erro",
+                text: "Ocorreu um erro ao obter as preferências.",
+                icon: "error",
+            });
+            return [];
+        }
+    };
+
+    const getMostRecentUserPreferences = () => {
+        const preferenceMap = new Map<number, { preferenceId: number; status: boolean; updatedAt: string }>();
+      
+        userPreferences.forEach((userPref) => {
+          const existing = preferenceMap.get(userPref.preferenceId);
+      
+          // Substitui a preferência se for mais recente ou se ainda não existir no mapa
+          if (!existing || new Date(userPref.updatedAt) > new Date(existing.updatedAt)) {
+            preferenceMap.set(userPref.preferenceId, userPref);
+          }
+        });
+      
+        return Array.from(preferenceMap.values());
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
@@ -229,15 +267,96 @@ const UserPage = () => {
         }
     };
 
-    const handleModalClose = () => {
-        setShowModal(false);
+
+    const handleModalOpen = async () => {
+        setShowModal(true);
+        const latestPreferences = await getPreference(); // Carrega as preferências ao abrir o modal
+        await getUserPreferences(); // Carrega as preferências do usuário
+        // await getUserPreferencesByStudentIdAndPreferenceId(userId,); // Exemplo de chamada para obter uma preferência específica
+        setPreferences(latestPreferences); // Atualiza o estado com as preferências retornadas
+    }
+
+    const handleModalClose = async () => {
+        try {
+            // Filtra os termos opcionais
+            const optionalPreferences = preferences.filter((preference) => preference.optional);
+        
+            for (const preference of optionalPreferences) {
+                const userPreference = userPreferences.find(
+                    (userPref) => userPref.preferenceId === preference.id
+                );
+        
+                // Se o termo opcional não existe no banco de dados, registra como false
+                if (!userPreference) {
+                    await handlePreferenceChange(preference.id, false); // Envia false para o banco
+                }
+            }
+        
+            // Fecha o modal após salvar os dados
+            setShowModal(false);
+        } catch (error) {
+            console.error("Erro ao salvar termos opcionais:", error);
+            Swal.fire({
+                title: "Erro",
+                text: "Ocorreu um erro ao salvar os termos opcionais.",
+                icon: "error",
+            });
+        }
     };
 
     const handleModalSave = () => {
-        console.log("Preferências salvas:", { optInMarketing, optInAnalytics });
-        setShowModal(false);
-        patchUserPreference(optInMarketing, optInAnalytics);
+
     };
+
+    const handlePreferenceChange = async (preferenceId: number, status: boolean) => {
+        try {
+            // Faz o POST para registrar o log da preferência
+            await _userPreference.postUserPreference(userId, preferenceId, status);
+        
+            // Atualiza o estado local para refletir a mudança e registrar a data/hora atual
+            setUserPreferences((prev) =>
+            prev.map((pref) =>
+                pref.preferenceId === preferenceId
+                ? { ...pref, status, updatedAt: new Date().toISOString() } // Atualiza o status e a data/hora
+                : pref
+            )
+            );
+        
+            console.log(`Log registrado: Preferência ${preferenceId} atualizada para ${status}`);
+        } catch (error) {
+            console.error(`Erro ao registrar o log da preferência ${preferenceId}:`, error);
+            Swal.fire({
+            title: "Erro",
+            text: "Ocorreu um erro ao registrar o log da preferência.",
+            icon: "error",
+            });
+        }
+    };
+
+    useEffect(() => {
+        // Aceita automaticamente os termos não opcionais
+        const acceptNonOptionalPreferences = async () => {
+            const nonOptionalPreferences = preferences.filter((preference) => !preference.optional);
+        
+            for (const preference of nonOptionalPreferences) {
+                const alreadyAccepted = userPreferences.find(
+                    (userPref) => userPref.preferenceId === preference.id && userPref.status === true
+                );
+        
+                // Se o termo não foi aceito ainda, registra a aceitação
+                if (!alreadyAccepted) {
+                    await handlePreferenceChange(preference.id, true); // Aceita automaticamente
+                }
+            }
+
+            // Marca que os termos não opcionais foram aceitos
+            setNonOptionalAccepted(true);
+        };
+        
+        if (!nonOptionalAccepted && preferences.length > 0 && userPreferences.length > 0) {
+            acceptNonOptionalPreferences();
+        }
+    }, [preferences, userPreferences, nonOptionalAccepted]); // Executa sempre que preferences ou userPreferences forem atualizados
 
     return (
         <>
@@ -260,64 +379,81 @@ const UserPage = () => {
             <Input labelId={"pass2"} labelName={"Confirme sua nova senha"} type={"password"} reference={pass2Ref} />
             <Button title={"Mudar senha"} onClick={verifyPassword} />
 
-            <h3>Preferencia de Privacidade</h3>
-            <Table
-              thList={["Nome", "Aceita", "Rejeitada","Status"]}
-              tdList={userPreferences}
-              renderRow={(row:any) => (
-                <>
-                  <td>{row.type == "0" ? "Emails de Marketing" : "Participar de Feedbacks" }</td>
-                  <td>{row.accepted ? formatDateString(row.accepted.toString()):"-"}</td>
-                  <td>{row.rejected ? formatDateString(row.rejected.toString()):"-"}</td>
-                  <td>{row.status ? "Aceito": "Rejeitado" }</td>
-                </>
-              )
-            }
-            />
-           < Button title={"Atualizar preferências"} onClick={() => setShowModal(true)} />
-            <h3>Deletar conta</h3>
+            <h3>Termos</h3>
+
+           < Button title={"Atualizar Termos"} onClick={handleModalOpen} />
+            <h3>Deletar conta</h3>  
             <Button title={"Deletar conta"} onClick={deleteAccount} />
             {showModal && (
                 <div className="modal-overlay" onClick={handleModalClose}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-header">
-                            <h3>Preferências de Privacidade</h3>
-
+                            <h3>Termos</h3>
                         </div>
                         
                         <div className="modal-body">
-                            <div className="checkbox-container">
-                                <label className="checkbox-label">
-                                    <input
-                                        type="checkbox"
-                                        checked={optInMarketing}
-                                        onChange={() => setOptInMarketing(!optInMarketing)}
-                                    />
-                                    <span className="checkmark"></span>
-                                    Desejo receber e-mails sobre novas matérias.
-                                </label>
-                            </div>
+                            {preferences.length > 0 && userPreferences.length > 0 ? (
+                                preferences.map((preference) => {
+                                    // Filtra as userPreferences para obter apenas a mais recente para cada preferenceId
+                                    const filteredUserPreferences = getMostRecentUserPreferences();
 
-                            <div className="checkbox-container">
-                                <label className="checkbox-label">
-                                    <input
-                                        type="checkbox"
-                                        checked={optInAnalytics } 
-                                        defaultChecked 
-                                        onChange={() => setOptInAnalytics(!optInAnalytics)}
-                                    />
-                                    <span className="checkmark"></span>
-                                    Autorizo receber pedidos de feedback.
-                                </label>
-                            </div>
+                                    // Encontra a preferência correspondente no array filtrado
+                                    const userPreference = filteredUserPreferences.find(
+                                        (userPref) => userPref.preferenceId === preference.id
+                                    );
+
+                                    const isAccepted = userPreference?.status === true;
+
+                                    return (
+                                        <div key={preference.id} className="checkbox-container">
+                                            <label className="checkbox-label">
+                                                {preference.optional ? (
+                                                    <input
+                                                        type="checkbox"
+                                                        id={`preference-${preference.id}`}
+                                                        defaultChecked={isAccepted} // Marca o checkbox se o status for true
+                                                        onChange={(e) =>
+                                                            handlePreferenceChange(preference.id, e.target.checked)
+                                                        } // Chama a função ao alterar o estado do checkbox
+                                                    />
+                                                ) : (
+                                                    <input
+                                                        type="checkbox"
+                                                        id={`preference-${preference.id}`}
+                                                        defaultChecked
+                                                        disabled // Desabilita o checkbox se a preferência não for opcional
+                                                    />
+                                                )}
+                                                {preference.name}
+                                            </label>
+                                            <p>{preference.description}</p>
+
+                                            {/* Exibe a mensagem com a data e horário de aceitação ou negação */}
+                                            {userPreference && (
+                                                <p>
+                                                    Este termo foi{" "}
+                                                    <strong>{isAccepted ? "Aceito" : "Negado"}</strong> em{" "}
+                                                    {new Date(userPreference.updatedAt).toLocaleString("pt-BR", {
+                                                        day: "2-digit",
+                                                        month: "2-digit",
+                                                        year: "numeric",
+                                                        hour: "2-digit",
+                                                        minute: "2-digit",
+                                                    })}
+                                                </p>
+                                            )}
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <p>Carregando preferências...</p>
+                            )}
                         </div>
 
                         <div className="modal-footer">
-                            <button className="btn-secondary" onClick={handleModalClose}>
-                                Cancelar
-                            </button>
-                            <button className="btn-primary" onClick={handleModalSave}>
-                                Salvar Preferências
+
+                            <button className="btn-primary" onClick={handleModalClose}>
+                                Salvar 
                             </button>
                         </div>
                     </div>

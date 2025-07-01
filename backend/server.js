@@ -11,7 +11,10 @@ const SubjectStudentsRouter = require('./routes/subjectStudentsRouter');
 const catchAsync = require('./utils/catchAsync');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
-const userPreferencesRouter = require('./routes/userPreferencesRouter');
+const userPreferenceRouter = require('./routes/userPreferenceRouter');
+const preferenceRouter = require('./routes/preferenceRouter');
+const preferenceVersionRouter = require('./routes/preferenceVersionRouter');
+
 
 const app = express();
 app.use(cors());
@@ -25,7 +28,9 @@ app.use('/grade', gradeRouter);
 app.use('/user', userRouter);
 app.use('/subject', subjectRouter);
 app.use('/subjectStudents', SubjectStudentsRouter);
-app.use('/userPreferences', userPreferencesRouter);
+app.use('/userPreference', userPreferenceRouter);
+app.use('/preference', preferenceRouter);
+app.use('/preferenceVersion', preferenceVersionRouter);
 
 
 app.use(catchAsync(async (req, res, next) => {

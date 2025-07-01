@@ -12,31 +12,30 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      type: {
-        type: Sequelize.ENUM('0', '1'), // 0: marketing email, 1: feedback   
-        allowNull: true,
-      },
       studentId: {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
           model: 'users',
-          key: 'id',
-        },
+          key: 'id'
+        }
       },
-      accepted: {
-        type: Sequelize.DATE,
+      preferenceId: {
+        type: Sequelize.INTEGER,
         allowNull: true,
-      },
-      rejected: {
-        type: Sequelize.DATE,
-        allowNull: true,
+        references: {
+          model: 'preferences',
+          key: 'id'
+        }
       },
       status: {
         type: Sequelize.BOOLEAN,
-        allowNull: false,
-        },
-
+        allowNull: true
+      },
+      date: {
+        type: Sequelize.DATE,
+        allowNull: true
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

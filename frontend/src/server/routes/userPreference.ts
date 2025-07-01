@@ -1,45 +1,45 @@
-import { stat } from "fs";
 import { api } from "../api";
 
-const baseUrl = "/userPreferences";
+const baseUrl = "/userPreference";
 
 export default class UserPreference {
+
+    
+
     public async getUserPreferences() {
         const response = await api.get(`${baseUrl}/`);
         return response.data.data;
     };
 
     public async getUserPreferenceById(id: number) {
-        const response = await api.get(`${baseUrl}/${id}`);
+        const response = await api.get(`${baseUrl}/student/${id}`);
         return response.data.data;
     };
 
-    public async postUserPreference(userId: number, preference: string, approved: boolean, rejected: boolean, status: boolean) {
-        const approvedDate = approved ? new Date(Date.now()) : null;
-        const rejectedDate = rejected ? new Date(Date.now()) : null;
-        console.log(approvedDate, rejectedDate);
-        
+    public async getUserPreferenceByStudentIdAndPreferenceId(studentId: number, preferenceId: number) {
+        const response = await api.get(`${baseUrl}/student/${studentId}/preference/${preferenceId}`);
+        return response.data.data;
+    };
+
+    public async postUserPreference(studentId: number, preferenceId: number, status: boolean) {
         const response = await api.post(`${baseUrl}/`, {
-            studentId: userId,
-            type: preference,
-            approved: approvedDate,
-            rejected: rejectedDate,
-            status: status
-            
+            studentId: studentId,
+            preferenceId: preferenceId,
+            status: status,
+            date: new Date() 
         });
         return response.data;
     };
 
-    public async patchUserPreference(id: number, preference: string, status: boolean) {
-
-
-            const response = await api.patch(`${baseUrl}/${id}`,{
-                type: preference,
-         
-                status: status})
-           
+    public async patchUserPreference(id: number, status: boolean) {
+        const response = await api.patch(`${baseUrl}/${id}`, {
+            status: status,
+            date: new Date() 
+        });
         return response.data;
     }
+
+
     public async getUserPreferenceByStudentId(studentId: number) {
         const response = await api.get(`${baseUrl}/student/${studentId}`);
         return response.data.data;

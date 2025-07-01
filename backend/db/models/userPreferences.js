@@ -9,10 +9,6 @@ const userPreferences = sequelize.define('userPreferences', {
     primaryKey: true,
     type: DataTypes.INTEGER
   },
-  type: {
-    type: DataTypes.ENUM('0', '1'), // 0: marketing email, 1: feedback   
-    allowNull: true,
-  },
   studentId: {
     type: DataTypes.INTEGER,
     allowNull: true,
@@ -21,17 +17,21 @@ const userPreferences = sequelize.define('userPreferences', {
       key: 'id',
     },
   },
-  accepted: {
-    type: DataTypes.DATE,
+  preferenceId: {
+    type: DataTypes.INTEGER,
     allowNull: true,
-  },
-  rejected: {
-    type: DataTypes.DATE,
-    allowNull: true,
+    references: {
+      model: 'preferences',
+      key: 'id',
+    },
   },
   status: {
     type: DataTypes.BOOLEAN,
-    allowNull: false,
+    allowNull: true
+  },
+  date: {
+    type: DataTypes.DATE,
+    allowNull: true
   },
   createdAt: {
     allowNull: false,
