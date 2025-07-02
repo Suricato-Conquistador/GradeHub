@@ -1,6 +1,6 @@
 # 🎓 GradeHub
 
-> 💻 **Status do projeto:** _Em desenvolvimento_
+> 💻 **Status do projeto:** _Concluído_
 
 <br>
 
