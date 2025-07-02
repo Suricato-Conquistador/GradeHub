@@ -34,8 +34,16 @@ Através de um sistema completo de **CRUD (Create, Read, Update, Delete)**, os u
 
 ---
 
+### 📜 Opt-in / Opt-out
+
+Através da tela de registro, o usuário pode visualizar e aceitar ou negar termos de uso.
+Pela tela de edição de usuário, é possível revisar os termos previamente aceitos ou recusados, além de acessar novos termos adicionados posteriormente.
+Na área administrativa, novos termos podem ser criados e gerenciados por administradores.
+
+---
+
 ### 🧹 Eliminação
 
-Através da opção **editar usuário**, o usuário terá a possibilidade de solicitar a exclusão de conta para que seus dados sejam removidos. Em caso da necessidade de restaurar um backup os dados do usuário se manterão removidos.
+Através da **tela de usuário**, o usuário terá a possibilidade de solicitar a exclusão de conta para que seus dados sejam removidos. Em caso da necessidade de restaurar um backup os dados do usuário se manterão removidos.
 
 ---
