@@ -140,15 +140,15 @@ const deleteUserBackup = catchAsync(async (req, res, next) => {
             paranoid: false,
         });
 
-        userData.name = null;
-        userData.email = null;
-        userData.userType = null;
-        userData.userCode = null;
-        userData.password = null;
+        if(userData) {
+            userData.name = null;
+            userData.email = null;
+            userData.userType = null;
+            userData.userCode = null;
+            userData.password = null;
+        }
 
         await userData.save();
-        
-        await deletedIds.destroy({ where: { id: idData.id }});
     });
 
     return {
